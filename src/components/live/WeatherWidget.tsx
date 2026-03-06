@@ -74,7 +74,6 @@ export default function WeatherWidget() {
         const hourly = data.hourly;
 
         // Hourly: next 24 hours from current hour
-        const nowHour = new Date().getHours();
         const hourlyItems = hourly.time
           .map((t, i) => ({
             time: new Date(t),
