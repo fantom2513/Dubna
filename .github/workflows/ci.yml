@@ -1,0 +1,29 @@
+# CI: сборка проекта (секрет VITE_YANDEX_RASP_KEY опционален для билда)
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        env:
+          # Для полной сборки с виджетом расписания добавьте секрет в Settings → Secrets
+          VITE_YANDEX_RASP_KEY: ${{ secrets.VITE_YANDEX_RASP_KEY || '' }}
+        run: npm run build
