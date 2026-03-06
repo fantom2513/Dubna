@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Train, Car, Bus, ArrowSquareOut, CaretDown,
@@ -70,7 +70,7 @@ function HeroSection() {
           <SectionTitle
             gradient
             className="mt-2"
-            style={{ fontSize: 'clamp(48px, 8vw, 96px)' } as React.CSSProperties}
+            style={{ fontSize: 'clamp(48px, 8vw, 96px)' }}
           >
             Откройте Дубну
           </SectionTitle>
@@ -253,7 +253,7 @@ function HowToGetSection() {
           {/* Car */}
           <GlassCard glowColor="gold" className="p-6">
             <Car size={32} color="#e8b84b" className="mb-4" />
-            <SectionLabel className="mb-2" style={{ color: 'var(--accent-secondary)' } as React.CSSProperties}>На машине</SectionLabel>
+            <SectionLabel className="mb-2" style={{ color: 'var(--accent-secondary)' }}>На машине</SectionLabel>
             <h3 className="text-text-primary font-semibold mb-4" style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.2rem' }}>
               Дмитровское шоссе (А104)
             </h3>
@@ -287,7 +287,7 @@ function HowToGetSection() {
           {/* Bus */}
           <GlassCard className="p-6">
             <Bus size={32} color="var(--muted-foreground)" className="mb-4" />
-            <SectionLabel className="mb-2" style={{ color: 'var(--muted-foreground)' } as React.CSSProperties}>На автобусе</SectionLabel>
+            <SectionLabel className="mb-2" style={{ color: 'var(--muted-foreground)' }}>На автобусе</SectionLabel>
             <h3 className="text-text-primary font-semibold mb-4" style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '1.2rem' }}>
               От метро Тимирязевская
             </h3>

@@ -1,10 +1,12 @@
 import type { ReactNode } from 'react';
+import type { CSSProperties } from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface GlassCardProps {
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
   onClick?: () => void;
   glowColor?: 'blue' | 'gold' | 'green';
 }
@@ -18,6 +20,7 @@ const glowShadow = {
 export default function GlassCard({
   children,
   className,
+  style,
   onClick,
   glowColor = 'blue',
 }: GlassCardProps) {
@@ -36,6 +39,7 @@ export default function GlassCard({
         background: 'var(--glass-bg)',
         borderColor: 'var(--glass-border)',
         backdropFilter: 'var(--glass-blur)',
+        ...style,
       }}
     >
       {children}

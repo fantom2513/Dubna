@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import CountUp from 'react-countup';
 import { ArrowSquareOut, UsersThree, Buildings, CaretDown } from '@phosphor-icons/react';
@@ -6,7 +5,6 @@ import PageLayout from '@/components/layout/PageLayout';
 import LazyImage from '@/components/ui/LazyImage';
 import GlassCard from '@/components/ui/GlassCard';
 import { SectionLabel, SectionTitle, SectionSubtitle, MonoText } from '@/components/ui/Typography';
-import Divider from '@/components/ui/Divider';
 import ElementsTable from '@/components/ui/ElementsTable';
 import DiscoveriesTimeline from '@/components/ui/DiscoveriesTimeline';
 import { Badge } from '@/components/ui/badge';
@@ -57,7 +55,7 @@ function HeroSection() {
           <SectionTitle
             gradient
             className="mt-2"
-            style={{ fontSize: 'clamp(40px, 7vw, 80px)' } as React.CSSProperties}
+            style={{ fontSize: 'clamp(40px, 7vw, 80px)' }}
           >
             Здесь рождаются элементы
           </SectionTitle>
@@ -397,7 +395,7 @@ function ExcursionSection() {
         </div>
 
         {/* CTA banner */}
-        <GlassCard className="p-10 text-center" style={{ background: 'radial-gradient(ellipse at center, rgba(79,195,247,0.08) 0%, transparent 70%), var(--glass-bg)' } as React.CSSProperties}>
+        <GlassCard className="p-10 text-center" style={{ background: 'radial-gradient(ellipse at center, rgba(79,195,247,0.08) 0%, transparent 70%), var(--glass-bg)' }}>
           <h3
             className="text-2xl font-bold text-text-primary mb-3"
             style={{ fontFamily: '"Cormorant Garamond", serif' }}
