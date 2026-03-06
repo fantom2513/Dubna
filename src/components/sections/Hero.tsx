@@ -1,7 +1,9 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
+import { CaretDown } from '@phosphor-icons/react';
+import { images } from '@/data/images';
 
 // Starfield
 function Stars() {
@@ -143,24 +145,48 @@ const badge = [
 ];
 
 export default function Hero() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const hide = () => setScrolled(true);
+    window.addEventListener('scroll', hide, { once: true, passive: true });
+    return () => window.removeEventListener('scroll', hide);
+  }, []);
+
   return (
     <section className="relative w-full h-screen overflow-hidden bg-bg-primary">
-      {/* Three.js Canvas */}
-      <div className="absolute inset-0">
+      {/* Background photo (z-0) */}
+      <img
+        src={images.hero}
+        alt="Панорама Дубны"
+        loading="eager"
+        fetchPriority="high"
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0, opacity: 0.12 }}
+      />
+
+      {/* Gradient overlay (z-1) */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          zIndex: 1,
+          background: `linear-gradient(to bottom, rgba(7,9,15,0.3) 0%, transparent 30%, transparent 60%, #07090f 100%)`,
+        }}
+      />
+
+      {/* Three.js Canvas (z-2) */}
+      <div className="absolute inset-0" style={{ zIndex: 2 }}>
         <Canvas
           camera={{ position: [0, 0, 16], fov: 60 }}
-          gl={{ antialias: true, alpha: false }}
-          style={{ background: '#07090f' }}
+          gl={{ antialias: true, alpha: true }}
+          style={{ background: 'transparent' }}
         >
           <Scene />
         </Canvas>
       </div>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/30 via-transparent to-bg-primary/80 pointer-events-none" />
-
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-6">
+      {/* Content (z-10) */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6" style={{ zIndex: 10 }}>
         {/* Coordinates */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -233,30 +259,27 @@ export default function Hero() {
           ))}
         </motion.div>
 
-        {/* Scroll arrow */}
+        {/* Scroll indicator — hides on first scroll */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2 }}
-          className="absolute bottom-10"
+          animate={{ opacity: scrolled ? 0 : 1 }}
+          transition={{ delay: scrolled ? 0 : 2.2, duration: 0.4 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/40 cursor-pointer"
+          style={{ zIndex: 10 }}
+          onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
         >
           <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="flex flex-col items-center gap-2 cursor-pointer"
-            onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
+            animate={{ y: [0, 8, 0] }}
+            transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+            className="flex flex-col items-center gap-1.5"
           >
             <span
-              className="text-xs text-text-secondary tracking-[0.2em] uppercase"
+              className="text-xs tracking-[0.2em] uppercase"
               style={{ fontFamily: '"IBM Plex Mono", monospace' }}
             >
-              Прокрутить
+              scroll
             </span>
-            <svg width="20" height="28" viewBox="0 0 20 28" fill="none">
-              <rect x="8" y="0" width="4" height="14" rx="2" fill="none" stroke="#4fc3f7" strokeWidth="1.5" />
-              <rect x="8.5" y="2" width="3" height="5" rx="1.5" fill="#4fc3f7" opacity="0.7" />
-              <path d="M3 18 L10 26 L17 18" stroke="#4fc3f7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            </svg>
+            <CaretDown size={24} weight="thin" />
           </motion.div>
         </motion.div>
       </div>

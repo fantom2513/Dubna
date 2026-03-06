@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
 import { useInView } from '../../hooks/useInView';
+import ErrorBoundary from '../ui/ErrorBoundary';
 
 import WeatherWidget from '../live/WeatherWidget';
 import AirQualityWidget from '../live/AirQualityWidget';
@@ -137,18 +138,22 @@ export default function LiveDashboard() {
         >
           {/* Row 1: Weather (tall, left) + ISS + AQ (right stack) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {/* Left: Weather (spans 2 rows on larger screens via row-span trick with explicit height) */}
             <motion.div variants={itemVariants} className="md:row-span-2">
-              <WeatherWidget />
+              <ErrorBoundary>
+                <WeatherWidget />
+              </ErrorBoundary>
             </motion.div>
 
-            {/* Right column: ISS + AQ stacked */}
             <div className="flex flex-col gap-4">
               <motion.div variants={itemVariants}>
-                <ISSTrackerWidget />
+                <ErrorBoundary>
+                  <ISSTrackerWidget />
+                </ErrorBoundary>
               </motion.div>
               <motion.div variants={itemVariants}>
-                <AirQualityWidget />
+                <ErrorBoundary>
+                  <AirQualityWidget />
+                </ErrorBoundary>
               </motion.div>
             </div>
           </div>
@@ -156,15 +161,21 @@ export default function LiveDashboard() {
           {/* Row 2: Events (left) + Train + News (right stack) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <motion.div variants={itemVariants}>
-              <EventsWidget />
+              <ErrorBoundary>
+                <EventsWidget />
+              </ErrorBoundary>
             </motion.div>
 
             <div className="flex flex-col gap-4">
               <motion.div variants={itemVariants}>
-                <TrainScheduleWidget />
+                <ErrorBoundary>
+                  <TrainScheduleWidget />
+                </ErrorBoundary>
               </motion.div>
               <motion.div variants={itemVariants}>
-                <NewsWidget />
+                <ErrorBoundary>
+                  <NewsWidget />
+                </ErrorBoundary>
               </motion.div>
             </div>
           </div>

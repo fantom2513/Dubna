@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { MagnifyingGlassPlus, Hand } from '@phosphor-icons/react';
+
+type CursorMode = 'default' | 'link' | 'zoom' | 'grab' | 'text';
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
   const [hovering, setHovering] = useState(false);
+  const [cursorMode, setCursorMode] = useState<CursorMode>('default');
   const ringPos = useRef({ x: 0, y: 0 });
   const mousePos = useRef({ x: 0, y: 0 });
   const raf = useRef<number>(0);
@@ -33,12 +37,27 @@ export default function CustomCursor() {
 
     const onEnter = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+
+      // Check data-cursor attribute first
+      const dataCursorEl = target.closest('[data-cursor]') as HTMLElement | null;
+      if (dataCursorEl) {
+        const mode = dataCursorEl.dataset.cursor as CursorMode;
+        setCursorMode(mode ?? 'default');
+        setHovering(true);
+        return;
+      }
+
+      // Existing hover logic for interactive elements
       if (target.closest('a, button, [role="button"], input, select, textarea')) {
+        setCursorMode('link');
         setHovering(true);
       }
     };
 
-    const onLeave = () => setHovering(false);
+    const onLeave = () => {
+      setHovering(false);
+      setCursorMode('default');
+    };
 
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseover', onEnter);
@@ -58,10 +77,38 @@ export default function CustomCursor() {
     return null;
   }
 
+  const ringStyle: React.CSSProperties = (() => {
+    switch (cursorMode) {
+      case 'link':
+        return { transform: 'translate(-50%, -50%) scale(1.5)', mixBlendMode: 'difference' };
+      case 'text':
+        return { width: '2px', height: '24px', borderRadius: '1px' };
+      default:
+        return {};
+    }
+  })();
+
   return (
     <>
       <div ref={dotRef} className="cursor-dot" />
-      <div ref={ringRef} className={`cursor-ring ${hovering ? 'hovering' : ''}`} />
+      <div
+        ref={ringRef}
+        className={`cursor-ring ${hovering ? 'hovering' : ''}`}
+        style={ringStyle}
+      >
+        {cursorMode === 'zoom' && (
+          <MagnifyingGlassPlus
+            size={16}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent-primary"
+          />
+        )}
+        {cursorMode === 'grab' && (
+          <Hand
+            size={16}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-accent-primary"
+          />
+        )}
+      </div>
     </>
   );
 }

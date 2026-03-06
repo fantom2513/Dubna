@@ -1,144 +1,247 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import {
+  NavigationArrow,
+  ArrowSquareOut,
+  MapPin,
+  Globe,
+  TelegramLogo,
+  YoutubeLogo,
+  Atom,
+} from '@phosphor-icons/react';
+import Divider from '../ui/Divider';
+import { useSmoothAnchor } from '@/hooks/useSmoothAnchor';
 
-const footerLinks = [
-  { label: 'О городе', href: '#about' },
-  { label: 'Наука', href: '#science' },
-  { label: 'Достопримечательности', href: '#attractions' },
-  { label: 'Статистика', href: '#stats' },
-  { label: 'Климат', href: '#climate' },
-  { label: 'Архитектура', href: '#architecture' },
-];
+// ── Monogram (same as Navbar) ─────────────────────────────────────────────────
+function Monogram({ size = 36 }: { size?: number }) {
+  return (
+    <div
+      className="flex items-center justify-center rounded-full font-bold flex-shrink-0"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size * 0.36,
+        background: 'linear-gradient(135deg, #4fc3f7, #1a6b8a)',
+        fontFamily: '"IBM Plex Mono", monospace',
+        color: '#07090f',
+      }}
+    >
+      Дб
+    </div>
+  );
+}
+
+const navLinks = [
+  { label: 'Главная',    to: '/' },
+  { label: 'Наука',      to: '/science' },
+  { label: 'Туристам',   to: '/tourism' },
+  { label: 'Инвесторам', to: '/invest' },
+  { label: 'Жить здесь', to: '/living' },
+  { label: 'Новости',    to: '/news' },
+  { label: 'Галерея',    to: '/gallery' },
+] as const;
+
+const externalLinks = [
+  { label: 'Сайт ОИЯИ',         href: 'https://jinr.ru' },
+  { label: 'ОЭЗ Дубна',         href: 'https://oez-dubna.ru' },
+  { label: 'Администрация',      href: 'https://dubna.ru' },
+  { label: 'Наукоград Дубна',    href: 'https://naukograd-dubna.ru' },
+] as const;
+
+const socials = [
+  { label: 'Telegram', Icon: TelegramLogo, href: 'https://t.me/dubna' },
+  { label: 'YouTube',  Icon: YoutubeLogo,  href: 'https://youtube.com' },
+] as const;
 
 export default function Footer() {
-  const handleClick = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollToAnchor = useSmoothAnchor();
 
   return (
-    <footer className="relative bg-bg-primary border-t border-white/5 overflow-hidden py-16 px-6">
-      {/* Huge background text */}
+    <footer className="relative bg-bg-primary border-t overflow-hidden" style={{ borderColor: 'var(--glass-border)' }}>
+      {/* Background watermark */}
       <div
         className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden"
         aria-hidden="true"
       >
         <span
-          className="text-white/[0.03] font-cormorant font-black leading-none"
-          style={{
-            fontFamily: '"Cormorant Garamond", serif',
-            fontSize: '20vw',
-            whiteSpace: 'nowrap',
-          }}
+          className="text-white/[0.025] font-black leading-none"
+          style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: '20vw', whiteSpace: 'nowrap' }}
         >
           DUBNA
         </span>
       </div>
 
-      <div className="relative max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          {/* Col 1: Logo + description */}
-          <div>
+      <div className="relative max-w-7xl mx-auto px-6 pt-16 pb-8">
+        {/* 4-column grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+
+          {/* Col 1 — Brand */}
+          <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <svg width="36" height="36" viewBox="0 0 32 32" fill="none">
-                <circle cx="16" cy="16" r="2.5" fill="#4fc3f7" />
-                <ellipse cx="16" cy="16" rx="13" ry="5" stroke="#4fc3f7" strokeWidth="0.8" strokeOpacity="0.7" fill="none" />
-                <ellipse cx="16" cy="16" rx="13" ry="5" stroke="#4fc3f7" strokeWidth="0.8" strokeOpacity="0.5" fill="none" transform="rotate(60 16 16)" />
-                <ellipse cx="16" cy="16" rx="13" ry="5" stroke="#4fc3f7" strokeWidth="0.8" strokeOpacity="0.4" fill="none" transform="rotate(120 16 16)" />
-                <circle cx="29" cy="16" r="1.5" fill="#4fc3f7" />
-                <circle cx="9.5" cy="7" r="1.5" fill="#4fc3f7" opacity="0.7" />
-                <circle cx="9.5" cy="25" r="1.5" fill="#4fc3f7" opacity="0.5" />
-              </svg>
+              <Monogram />
               <span
-                className="text-text-primary text-xl font-bold tracking-[0.2em]"
-                style={{ fontFamily: '"Cormorant Garamond", serif' }}
+                className="text-text-primary text-sm tracking-[0.15em] font-bold"
+                style={{ fontFamily: '"IBM Plex Mono", monospace' }}
               >
                 ДУБНА
               </span>
             </div>
-            <p className="text-text-secondary text-sm leading-relaxed max-w-xs">
-              Наукоград Дубна — город будущего на берегу Волги.
-              Атомная столица России и мировой центр ядерной физики.
+            <p className="text-text-secondary text-sm leading-relaxed mb-4" style={{ fontFamily: 'Geologica, sans-serif' }}>
+              Наукоград на берегу Волги. Атомная столица России и мировой центр ядерной физики.
             </p>
+            <div className="flex items-center gap-1.5">
+              <NavigationArrow size={13} className="text-accent-primary flex-shrink-0" />
+              <span
+                className="text-xs text-accent-primary"
+                style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+              >
+                56.7333° N, 37.1667° E
+              </span>
+            </div>
           </div>
 
-          {/* Col 2: Navigation */}
+          {/* Col 2 — Navigation */}
           <div>
-            <h3
-              className="text-xs uppercase tracking-[0.2em] text-accent-primary mb-6"
+            <p
+              className="text-[10px] uppercase tracking-[0.2em] text-accent-primary mb-5"
               style={{ fontFamily: '"IBM Plex Mono", monospace' }}
             >
               Навигация
-            </h3>
-            <ul className="space-y-3">
-              {footerLinks.map((link) => (
-                <li key={link.href}>
-                  <button
-                    onClick={() => handleClick(link.href)}
-                    className="text-text-secondary hover:text-text-primary transition-colors text-sm"
+            </p>
+            <ul className="space-y-2.5">
+              {navLinks.map((link) => (
+                <li key={link.to}>
+                  <Link
+                    to={link.to}
+                    className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                    style={{ fontFamily: 'Geologica, sans-serif' }}
                   >
                     {link.label}
-                  </button>
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <button
+                  onClick={() => scrollToAnchor('#about')}
+                  className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  style={{ fontFamily: 'Geologica, sans-serif' }}
+                >
+                  О городе
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Col 3 — External resources */}
+          <div>
+            <p
+              className="text-[10px] uppercase tracking-[0.2em] text-accent-primary mb-5"
+              style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+            >
+              Ресурсы
+            </p>
+            <ul className="space-y-2.5">
+              {externalLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors group"
+                    style={{ fontFamily: 'Geologica, sans-serif' }}
+                  >
+                    {link.label}
+                    <ArrowSquareOut size={12} className="opacity-40 group-hover:opacity-70 transition-opacity flex-shrink-0" />
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Col 3: Coordinates */}
+          {/* Col 4 — Contacts & info */}
           <div>
-            <h3
-              className="text-xs uppercase tracking-[0.2em] text-accent-primary mb-6"
+            <p
+              className="text-[10px] uppercase tracking-[0.2em] text-accent-primary mb-5"
               style={{ fontFamily: '"IBM Plex Mono", monospace' }}
             >
-              Координаты
-            </h3>
-            <div className="space-y-2">
-              {[
-                { label: 'Широта', value: '55°44′ с.ш.' },
-                { label: 'Долгота', value: '37°14′ в.д.' },
-                { label: 'Регион', value: 'МО, Россия' },
-                { label: 'Статус', value: 'Наукоград' },
-                { label: 'Основан', value: '1956 год' },
-              ].map((item) => (
-                <div key={item.label} className="flex justify-between gap-4">
-                  <span
-                    className="text-xs text-text-secondary uppercase tracking-wider"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                  >
-                    {item.label}
-                  </span>
-                  <span
-                    className="text-xs text-text-primary"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                  >
-                    {item.value}
+              Контакты
+            </p>
+            <div className="space-y-3">
+              <div className="flex items-start gap-2">
+                <MapPin size={14} className="text-accent-primary flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-text-secondary" style={{ fontFamily: 'Geologica, sans-serif' }}>
+                  Московская обл., г. Дубна
+                </span>
+              </div>
+              <div className="flex items-start gap-2">
+                <Globe size={14} className="text-accent-primary flex-shrink-0 mt-0.5" />
+                <a
+                  href="https://dubna.ru"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-text-secondary hover:text-text-primary transition-colors"
+                  style={{ fontFamily: 'Geologica, sans-serif' }}
+                >
+                  dubna.ru
+                </a>
+              </div>
+              <div
+                className="mt-4 rounded-lg p-3"
+                style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)' }}
+              >
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Atom size={12} className="text-accent-primary" />
+                  <span className="text-[10px] text-text-secondary uppercase tracking-wider" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
+                    ОИЯИ / JINR
                   </span>
                 </div>
-              ))}
+                <p className="text-xs text-text-secondary" style={{ fontFamily: 'Geologica, sans-serif' }}>
+                  Основан в 1956 году. 18 государств-членов.
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Divider with atom icon */}
+        <Divider icon={<Atom size={14} className="text-accent-primary" />} className="mb-8" />
+
+        {/* Bottom bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <motion.div
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="w-2 h-2 rounded-full bg-accent-primary"
+              className="w-1.5 h-1.5 rounded-full bg-accent-primary flex-shrink-0"
             />
             <span
               className="text-xs text-text-secondary"
               style={{ fontFamily: '"IBM Plex Mono", monospace' }}
             >
-              © 2024 Дубна — Город Будущего
+              © 2024 Дубна — Город будущего
             </span>
           </div>
-          <span
-            className="text-xs text-text-secondary/50"
-            style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-          >
-            55°44′N · 37°14′E · JINR · DUBNA
-          </span>
+
+          <div className="flex items-center gap-3">
+            {socials.map(({ label, Icon, href }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="text-text-secondary hover:text-text-primary transition-colors"
+              >
+                <Icon size={18} />
+              </a>
+            ))}
+            <span
+              className="text-xs text-text-secondary/40 ml-2"
+              style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+            >
+              56°N · 37°E · JINR
+            </span>
+          </div>
         </div>
       </div>
     </footer>

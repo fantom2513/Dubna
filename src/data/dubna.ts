@@ -1,3 +1,5 @@
+import { images } from './images';
+
 export interface CityStat {
   value: number;
   label: string;
@@ -110,7 +112,7 @@ export const attractions: Attraction[] = [
     size: 'tall',
     gradientFrom: '#0e1f3d',
     gradientTo: '#0a3a5c',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/JINR_main_building.jpg/800px-JINR_main_building.jpg',
+    imageUrl: images.jinr,
   },
   {
     id: 'lenin',
@@ -121,7 +123,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#1a1206',
     gradientTo: '#2d2010',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Lenin_monument_Dubna.jpg/600px-Lenin_monument_Dubna.jpg',
+    imageUrl: images.leninMonument,
   },
   {
     id: 'embankment',
@@ -132,7 +134,7 @@ export const attractions: Attraction[] = [
     size: 'wide',
     gradientFrom: '#061520',
     gradientTo: '#0c2a3d',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Dubna_embankment.jpg/800px-Dubna_embankment.jpg',
+    imageUrl: images.embankment,
   },
   {
     id: 'dk-mir',
@@ -143,7 +145,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#1a0e0e',
     gradientTo: '#2d1a1a',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/DK_Mir_Dubna.jpg/800px-DK_Mir_Dubna.jpg',
+    imageUrl: images.dkMir,
   },
   {
     id: 'jinr-museum',
@@ -154,6 +156,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#061828',
     gradientTo: '#0e2a40',
+    imageUrl: images.jinrMuseum,
   },
   {
     id: 'park',
@@ -164,7 +167,7 @@ export const attractions: Attraction[] = [
     size: 'tall',
     gradientFrom: '#061a0a',
     gradientTo: '#0e2d14',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Dubna_Bolshaya_Volga_park.jpg/800px-Dubna_Bolshaya_Volga_park.jpg',
+    imageUrl: images.park,
   },
   {
     id: 'big-chair',
@@ -175,6 +178,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#1a0e06',
     gradientTo: '#3a2010',
+    imageUrl: images.bigChair,
   },
   {
     id: 'dam-viewpoint',
@@ -185,7 +189,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#061520',
     gradientTo: '#0a2a3d',
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Ivankovo_dam_Dubna.jpg/800px-Ivankovo_dam_Dubna.jpg',
+    imageUrl: images.dam,
   },
 ];
 

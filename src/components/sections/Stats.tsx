@@ -6,6 +6,22 @@ import {
 import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useInView';
 import { cityStats, radarData, populationData } from '../../data/dubna';
+import {
+  Tooltip as ShadcnTooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+
+// Tooltip texts keyed by label
+const statTooltips: Record<string, string> = {
+  'Жителей':             'По данным Росстат, 2023',
+  'Год основания':        'Дубна основана как закрытый научный городок',
+  'Элемент':             'Дубний (Db) — назван в честь города',
+  'Стран-членов ОИЯИ':   '18 государств-членов ОИЯИ',
+  'Учёных в ОИЯИ':       'Ядерных физиков и исследователей',
+  'НИИ и технопарков':   'Научно-исследовательских организаций',
+};
 
 export default function Stats() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.1 });
@@ -36,36 +52,62 @@ export default function Stats() {
         </div>
 
         {/* Counter cards */}
-        <div ref={ref} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-20">
-          {cityStats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 40 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1 }}
-              className="bg-bg-card border border-white/5 rounded-xl p-6 text-center hover:border-accent-primary/20 transition-all"
-            >
-              <div
-                className="text-accent-primary font-bold leading-none mb-2"
-                style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(24px, 3vw, 40px)' }}
-              >
-                {inView ? (
-                  <CountUp
-                    start={0}
-                    end={stat.value}
-                    duration={2.5}
-                    separator=" "
-                    delay={i * 0.1}
-                  />
-                ) : '0'}
-                {stat.suffix && (
-                  <span className="text-accent-secondary text-base ml-1">{stat.suffix}</span>
-                )}
-              </div>
-              <div className="text-text-secondary text-xs leading-tight">{stat.label}</div>
-            </motion.div>
-          ))}
-        </div>
+        <TooltipProvider delayDuration={200}>
+          <div ref={ref} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mb-20">
+            {cityStats.map((stat, i) => (
+              <ShadcnTooltip key={stat.label}>
+                <TooltipTrigger asChild>
+                  <motion.div
+                    initial={{ opacity: 0, y: 40 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: i * 0.1 }}
+                    className="bg-bg-card border-t border-b border-white/5 p-6 text-center hover:border-accent-primary/20 transition-all cursor-default
+                               border-r border-r-white/5 last:border-r-0"
+                  >
+                    <div
+                      className="text-accent-primary font-bold leading-none mb-2"
+                      style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(24px, 3vw, 40px)' }}
+                    >
+                      {inView ? (
+                        <CountUp
+                          start={0}
+                          end={stat.value}
+                          duration={2.5}
+                          separator=" "
+                          delay={i * 0.1}
+                        />
+                      ) : '0'}
+                      {stat.suffix && (
+                        <span className="text-accent-secondary text-base ml-1">{stat.suffix}</span>
+                      )}
+                    </div>
+                    <div className="text-text-secondary text-xs leading-tight">{stat.label}</div>
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent
+                  style={{
+                    background: 'var(--glass-bg)',
+                    border: '1px solid var(--glass-border)',
+                    backdropFilter: 'blur(12px)',
+                    color: 'var(--foreground)',
+                    fontFamily: '"IBM Plex Mono", monospace',
+                    fontSize: '11px',
+                  }}
+                >
+                  {statTooltips[stat.label] ?? stat.description}
+                </TooltipContent>
+              </ShadcnTooltip>
+            ))}
+          </div>
+        </TooltipProvider>
+
+        {/* Source attribution */}
+        <p
+          className="text-center text-xs mb-16 -mt-14"
+          style={{ color: 'var(--muted-foreground)', fontFamily: '"IBM Plex Mono", monospace' }}
+        >
+          Данные: ОИЯИ, Росстат, ОЭЗ Дубна, 2024
+        </p>
 
         {/* Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

@@ -1,6 +1,14 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useInView';
+import { images } from '@/data/images';
+
+// Subtle background images for cards (null = no bg photo)
+const blockImages: Record<string, string | null> = {
+  history: null,
+  science: images.jinr,
+  nature:  images.volga,
+};
 
 const blocks = [
   {
@@ -130,8 +138,19 @@ function AboutBlock({ block, index }: { block: Block; index: number }) {
       initial={{ opacity: 0, y: 60 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.15 }}
-      className="bg-bg-card border border-white/5 rounded-2xl p-8 hover:border-accent-primary/20 transition-all duration-500"
+      className="relative bg-bg-card border border-white/5 rounded-2xl p-8 hover:border-accent-primary/20 transition-all duration-500 overflow-hidden"
     >
+      {/* Subtle background photo */}
+      {blockImages[block.id] && (
+        <img
+          src={blockImages[block.id]!}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+          style={{ opacity: block.id === 'science' ? 0.06 : 0.1 }}
+        />
+      )}
       <p
         className="text-xs uppercase tracking-[0.2em] mb-4"
         style={{ fontFamily: '"IBM Plex Mono", monospace', color: block.color }}

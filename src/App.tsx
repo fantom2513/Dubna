@@ -1,19 +1,21 @@
 import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Routes, Route } from 'react-router-dom';
 import Lenis from 'lenis';
+import { Toaster } from 'sonner';
 
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-import Hero from './components/sections/Hero';
-import About from './components/sections/About';
-import Stats from './components/sections/Stats';
-import LiveDashboard from './components/sections/LiveDashboard';
-import Attractions from './components/sections/Attractions';
-import Science from './components/sections/Science';
-import Architecture from './components/sections/Architecture';
-import Climate from './components/sections/Climate';
-import Map from './components/sections/Map';
+import { setLenis } from '@/lib/lenis';
 import CustomCursor from './components/ui/CustomCursor';
+import CommandPalette from './components/ui/CommandPalette';
+import SharedLayout from './components/layout/SharedLayout';
+
+import HomePage from './pages/HomePage';
+import SciencePage from './pages/SciencePage';
+import InvestPage from './pages/InvestPage';
+import TourismPage from './pages/TourismPage';
+import LivingPage from './pages/LivingPage';
+import NewsPage from './pages/NewsPage';
+import GalleryPage from './pages/GalleryPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
   useEffect(() => {
@@ -22,45 +24,50 @@ export default function App() {
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
+    setLenis(lenis);
 
     function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
-
     const rafId = requestAnimationFrame(raf);
 
     return () => {
       cancelAnimationFrame(rafId);
       lenis.destroy();
+      setLenis(null);
     };
   }, []);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="min-h-screen bg-bg-primary"
-      >
-        <CustomCursor />
-        <Navbar />
-
-        <main>
-          <Hero />
-          <About />
-          <Stats />
-          <LiveDashboard />
-          <Attractions />
-          <Science />
-          <Architecture />
-          <Climate />
-          <Map />
-        </main>
-
-        <Footer />
-      </motion.div>
-    </AnimatePresence>
+    <>
+      <CustomCursor />
+      <CommandPalette />
+      <Routes>
+        <Route element={<SharedLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/science" element={<SciencePage />} />
+          <Route path="/invest" element={<InvestPage />} />
+          <Route path="/tourism" element={<TourismPage />} />
+          <Route path="/living" element={<LivingPage />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+      <Toaster
+        theme="dark"
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid var(--glass-border)',
+            backdropFilter: 'blur(20px)',
+            color: '#f0f4f8',
+            fontFamily: 'Geologica, sans-serif',
+          },
+        }}
+      />
+    </>
   );
 }
