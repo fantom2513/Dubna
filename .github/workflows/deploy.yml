@@ -1,4 +1,4 @@
-# Деплой на сервер по SSH после пуша в main
+# Деплой на сервер через self-hosted GitHub Actions runner
 name: Deploy
 
 on:
@@ -8,7 +8,8 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # Запуск на вашем self-hosted runner (метки: self-hosted, Linux, X64)
+    runs-on: [self-hosted, Linux]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,28 +28,14 @@ jobs:
           VITE_YANDEX_RASP_KEY: ${{ secrets.VITE_YANDEX_RASP_KEY || '' }}
         run: npm run build
 
-      - name: Setup SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Test SSH connection
-        env:
-          SSH_PORT: ${{ secrets.SSH_PORT }}
-        run: |
-          PORT="${SSH_PORT:-22}"
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "$PORT" -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
-          ssh -o StrictHostKeyChecking=no -p "$PORT" ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH OK' && test -d ${{ secrets.DEPLOY_PATH }} && echo 'Path OK'"
-
-      - name: Deploy via rsync
-        env:
-          SSH_PORT: ${{ secrets.SSH_PORT }}
+      - name: Deploy (local sync on server)
         run: |
           set -e
-          PORT="${SSH_PORT:-22}"
-          rsync -avz --delete \
-            -e "ssh -o StrictHostKeyChecking=no -p $PORT" \
-            dist/ \
-            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          DEST="${{ secrets.DEPLOY_PATH }}"
+          if [ -z "$DEST" ]; then
+            echo "DEPLOY_PATH secret is empty. Set it (e.g. /var/www/dubna)."
+            exit 1
+          fi
+          test -d "$DEST"
+          rsync -av --delete dist/ "$DEST"/
           echo "Deploy finished successfully."
