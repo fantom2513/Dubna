@@ -32,14 +32,23 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Deploy via rsync
+      - name: Test SSH connection
         env:
           SSH_PORT: ${{ secrets.SSH_PORT }}
         run: |
           PORT="${SSH_PORT:-22}"
           mkdir -p ~/.ssh
           ssh-keyscan -p "$PORT" -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          ssh -o StrictHostKeyChecking=no -p "$PORT" ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo 'SSH OK' && test -d ${{ secrets.DEPLOY_PATH }} && echo 'Path OK'"
+
+      - name: Deploy via rsync
+        env:
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          set -e
+          PORT="${SSH_PORT:-22}"
           rsync -avz --delete \
             -e "ssh -o StrictHostKeyChecking=no -p $PORT" \
             dist/ \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+          echo "Deploy finished successfully."

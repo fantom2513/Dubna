@@ -16,7 +16,7 @@ dist
 .env.*.local
 dist-ssr
 *.local
-
+ssh*
 # Editor / IDE
 .claude
 
