@@ -1,0 +1,45 @@
+# Деплой на сервер по SSH после пуша в main
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # Ручной запуск из вкладки Actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        env:
+          VITE_YANDEX_RASP_KEY: ${{ secrets.VITE_YANDEX_RASP_KEY || '' }}
+        run: npm run build
+
+      - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy via rsync
+        env:
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+        run: |
+          PORT="${SSH_PORT:-22}"
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "$PORT" -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts 2>/dev/null || true
+          rsync -avz --delete \
+            -e "ssh -o StrictHostKeyChecking=no -p $PORT" \
+            dist/ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/

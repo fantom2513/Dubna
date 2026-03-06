@@ -25,6 +25,7 @@ export interface WeatherHourly {
   time: string[];
   temperature_2m: number[];
   precipitation_probability: number[];
+  weather_code: number[];
 }
 
 export interface WeatherData {
@@ -80,7 +81,7 @@ async function fetchWeather(): Promise<WeatherData> {
     'daily',
     'temperature_2m_max,temperature_2m_min,weather_code,sunrise,sunset,precipitation_probability_max'
   );
-  url.searchParams.set('hourly', 'temperature_2m,precipitation_probability');
+  url.searchParams.set('hourly', 'temperature_2m,precipitation_probability,weather_code');
   url.searchParams.set('timezone', 'Europe/Moscow');
   url.searchParams.set('forecast_days', '7');
 

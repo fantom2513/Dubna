@@ -1,7 +1,16 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useInView } from '../../hooks/useInView';
+
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    map.invalidateSize();
+  }, [map]);
+  return null;
+}
 
 const mapPoints = [
   { lat: 56.740, lon: 37.185, label: 'ОИЯИ', color: '#4fc3f7' },
@@ -71,7 +80,7 @@ export default function Map() {
                   <div className="flex-1 h-px bg-white/5" />
                   <span
                     className="text-sm text-accent-primary"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+                    style={{ fontFamily: '"IBM Plex Mono", monospace', whiteSpace: 'nowrap' }}
                   >
                     {item.value}
                   </span>
@@ -96,6 +105,7 @@ export default function Map() {
               zoomControl={true}
               scrollWheelZoom={false}
             >
+              <MapResizer />
               <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'

@@ -27,11 +27,26 @@ function GalleryItem({
       onMouseLeave={() => setHovered(false)}
       onClick={() => onOpen(item)}
     >
-      {/* Gradient bg */}
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${item.gradient} transition-transform duration-500`}
-        style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
-      />
+      {/* Background: photo with gradient overlay, or plain gradient */}
+      {item.imageUrl ? (
+        <img
+          src={item.imageUrl}
+          alt={item.name}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500"
+          style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
+          loading="lazy"
+          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+        />
+      ) : (
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${item.gradient} transition-transform duration-500`}
+          style={{ transform: hovered ? 'scale(1.05)' : 'scale(1)' }}
+        />
+      )}
+      {/* Dark overlay for readability */}
+      {item.imageUrl && (
+        <div className="absolute inset-0 bg-black/30" />
+      )}
 
       {/* Grid overlay */}
       <div className="absolute inset-0 grid-pattern opacity-20" />
@@ -103,6 +118,15 @@ function Lightbox({ item, onClose }: { item: ArchitectureItem; onClose: () => vo
         <div
           className={`w-full aspect-video rounded-2xl bg-gradient-to-br ${item.gradient} relative overflow-hidden`}
         >
+          {item.imageUrl && (
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+            />
+          )}
+          <div className="absolute inset-0 bg-black/40" />
           <div className="absolute inset-0 grid-pattern opacity-30" />
           <div className="absolute inset-6 border border-white/10 rounded-xl" />
           <div className="absolute inset-10 border border-white/5 rounded-lg" />

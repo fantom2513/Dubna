@@ -31,13 +31,31 @@ function AttractionCard({ attraction, index }: { attraction: Attraction; index: 
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Gradient background */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(135deg, ${attraction.gradientFrom}, ${attraction.gradientTo})`,
-        }}
-      />
+      {/* Background: photo with gradient overlay, or plain gradient */}
+      {attraction.imageUrl ? (
+        <>
+          <img
+            src={attraction.imageUrl}
+            alt={attraction.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to top, ${attraction.gradientFrom}ee 0%, ${attraction.gradientFrom}88 50%, transparent 100%)`,
+            }}
+          />
+        </>
+      ) : (
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(135deg, ${attraction.gradientFrom}, ${attraction.gradientTo})`,
+          }}
+        />
+      )}
 
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 grid-pattern opacity-30" />

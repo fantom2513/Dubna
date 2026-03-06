@@ -14,6 +14,7 @@ export interface Attraction {
   size: 'normal' | 'tall' | 'wide';
   gradientFrom: string;
   gradientTo: string;
+  imageUrl?: string;
 }
 
 export interface Element {
@@ -42,6 +43,7 @@ export interface ArchitectureItem {
   gradient: string;
   colSpan?: number;
   rowSpan?: number;
+  imageUrl?: string;
 }
 
 export interface RadarDataPoint {
@@ -108,6 +110,7 @@ export const attractions: Attraction[] = [
     size: 'tall',
     gradientFrom: '#0e1f3d',
     gradientTo: '#0a3a5c',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/JINR_main_building.jpg/800px-JINR_main_building.jpg',
   },
   {
     id: 'lenin',
@@ -118,6 +121,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#1a1206',
     gradientTo: '#2d2010',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Lenin_monument_Dubna.jpg/600px-Lenin_monument_Dubna.jpg',
   },
   {
     id: 'embankment',
@@ -128,6 +132,7 @@ export const attractions: Attraction[] = [
     size: 'wide',
     gradientFrom: '#061520',
     gradientTo: '#0c2a3d',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Dubna_embankment.jpg/800px-Dubna_embankment.jpg',
   },
   {
     id: 'dk-mir',
@@ -138,6 +143,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#1a0e0e',
     gradientTo: '#2d1a1a',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/DK_Mir_Dubna.jpg/800px-DK_Mir_Dubna.jpg',
   },
   {
     id: 'jinr-museum',
@@ -158,6 +164,7 @@ export const attractions: Attraction[] = [
     size: 'tall',
     gradientFrom: '#061a0a',
     gradientTo: '#0e2d14',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Dubna_Bolshaya_Volga_park.jpg/800px-Dubna_Bolshaya_Volga_park.jpg',
   },
   {
     id: 'big-chair',
@@ -178,6 +185,7 @@ export const attractions: Attraction[] = [
     size: 'normal',
     gradientFrom: '#061520',
     gradientTo: '#0a2a3d',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Ivankovo_dam_Dubna.jpg/800px-Ivankovo_dam_Dubna.jpg',
   },
 ];
 
@@ -257,12 +265,12 @@ export const seasons: Season[] = [
 
 // Architecture gallery items
 export const architectureItems: ArchitectureItem[] = [
-  { id: 'arch1', name: 'Главпочтамт Дубны', year: '1950-е', gradient: 'from-gray-800 to-gray-900' },
-  { id: 'arch2', name: 'ДК «Мир»', year: '1954', gradient: 'from-slate-700 to-slate-900', colSpan: 2 },
-  { id: 'arch3', name: 'Жилые дома улицы Мира', year: '1955–1960', gradient: 'from-zinc-700 to-zinc-900' },
-  { id: 'arch4', name: 'Кинотеатр «Октябрь»', year: '1957', gradient: 'from-stone-700 to-stone-900' },
-  { id: 'arch5', name: 'Административные здания', year: '1952–1958', gradient: 'from-neutral-700 to-neutral-900', colSpan: 2 },
-  { id: 'arch6', name: 'Набережная правого берега', year: '1950-е', gradient: 'from-gray-700 to-gray-950' },
+  { id: 'arch1', name: 'Главпочтамт Дубны', year: '1950-е', gradient: 'from-gray-800 to-gray-900', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Dubna_post_office.jpg/800px-Dubna_post_office.jpg' },
+  { id: 'arch2', name: 'ДК «Мир»', year: '1954', gradient: 'from-slate-700 to-slate-900', colSpan: 2, imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/DK_Mir_Dubna.jpg/800px-DK_Mir_Dubna.jpg' },
+  { id: 'arch3', name: 'Жилые дома улицы Мира', year: '1955–1960', gradient: 'from-zinc-700 to-zinc-900', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Dubna_street_Mira.jpg/800px-Dubna_street_Mira.jpg' },
+  { id: 'arch4', name: 'Кинотеатр «Октябрь»', year: '1957', gradient: 'from-stone-700 to-stone-900', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Dubna_cinema_Oktyabr.jpg/800px-Dubna_cinema_Oktyabr.jpg' },
+  { id: 'arch5', name: 'Административные здания', year: '1952–1958', gradient: 'from-neutral-700 to-neutral-900', colSpan: 2, imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Dubna_admin_buildings.jpg/800px-Dubna_admin_buildings.jpg' },
+  { id: 'arch6', name: 'Набережная правого берега', year: '1950-е', gradient: 'from-gray-700 to-gray-950', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Dubna_embankment.jpg/800px-Dubna_embankment.jpg' },
 ];
 
 // Radar chart data

@@ -12,27 +12,25 @@ function SunArc({ sunrise, sunset }: { sunrise: string; sunset: string }) {
   const elapsed = now.getTime() - riseTime.getTime();
   const progress = Math.max(0, Math.min(1, elapsed / total));
 
-  // SVG arc: from left to right, semicircle
+  // SVG arc: from left to right, semicircle (viewBox coords)
   const cx = 80; const cy = 48; const r = 42;
-  const startAngle = Math.PI; // left
-  const endAngle = 0;         // right
+  const startAngle = Math.PI;
+  const endAngle = 0;
   const t = startAngle + (endAngle - startAngle) * progress;
   const dotX = cx + r * Math.cos(t);
-  const dotY = cy + r * Math.sin(t);
+  const dotY = cy - r * Math.sin(t);
 
   const fmt = (d: Date) => d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   return (
-    <div className="relative">
-      <svg width="160" height="56" viewBox="0 0 160 56">
-        {/* Arc track */}
+    <div className="relative w-full">
+      <svg className="w-full h-auto" viewBox="0 0 160 56" preserveAspectRatio="xMidYMid meet">
         <path
           d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
           fill="none"
           stroke="rgba(255,255,255,0.08)"
           strokeWidth="2"
         />
-        {/* Progress arc */}
         {progress > 0 && (
           <path
             d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${dotX} ${dotY}`}
@@ -42,10 +40,8 @@ function SunArc({ sunrise, sunset }: { sunrise: string; sunset: string }) {
             strokeLinecap="round"
           />
         )}
-        {/* Sun dot */}
         <circle cx={dotX} cy={dotY} r="5" fill="#e8b84b" />
         <circle cx={dotX} cy={dotY} r="9" fill="rgba(232,184,75,0.2)" />
-        {/* Ground line */}
         <line x1={cx - r - 6} y1={cy} x2={cx + r + 6} y2={cy} stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
       </svg>
       <div className="flex justify-between text-[10px] mt-1" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
@@ -84,6 +80,7 @@ export default function WeatherWidget() {
             time: new Date(t),
             temp: hourly.temperature_2m[i],
             precip: hourly.precipitation_probability[i],
+            weatherCode: hourly.weather_code[i],
           }))
           .filter((h) => h.time > new Date(new Date().setMinutes(0, 0, 0)))
           .slice(0, 24);
@@ -155,7 +152,7 @@ export default function WeatherWidget() {
                           {h.time.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false })}
                         </span>
                         <span className="text-lg select-none" role="img" aria-hidden="true">
-                          {getWeatherInfo(nowHour).icon}
+                          {getWeatherInfo(h.weatherCode).icon}
                         </span>
                         <span
                           className="text-xs text-text-primary font-bold"
@@ -235,6 +232,7 @@ export default function WeatherWidget() {
                     tick={{ fill: '#8a9bbf', fontSize: 9, fontFamily: '"IBM Plex Mono", monospace' }}
                     tickLine={false}
                     axisLine={false}
+                    interval={0}
                   />
                   <YAxis hide />
                   <Tooltip
@@ -247,8 +245,8 @@ export default function WeatherWidget() {
                     }}
                     formatter={(v: number | undefined) => v !== undefined ? [`${v}°C`, ''] : ['', '']}
                   />
-                  <Line type="monotone" dataKey="max" stroke="#e8b84b" strokeWidth={1.5} dot={false} />
-                  <Line type="monotone" dataKey="min" stroke="#4fc3f7" strokeWidth={1.5} dot={false} />
+                  <Line type="monotone" dataKey="max" stroke="#e8b84b" strokeWidth={1.5} dot={false} activeDot={false} />
+                  <Line type="monotone" dataKey="min" stroke="#4fc3f7" strokeWidth={1.5} dot={false} activeDot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

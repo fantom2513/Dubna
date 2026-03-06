@@ -24,7 +24,7 @@ export default function WidgetCard({
 }: WidgetCardProps) {
   return (
     <div
-      className={`bg-bg-card border border-white/5 rounded-2xl p-6 hover:border-accent-primary/20 transition-all duration-300 flex flex-col ${className}`}
+      className={`bg-bg-card border border-white/5 rounded-2xl p-6 hover:border-accent-primary/20 transition-all duration-300 flex flex-col min-w-0 ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
