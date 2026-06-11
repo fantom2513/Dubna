@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Snowflake, Sun, Leaf, Wind, type Icon } from '@phosphor-icons/react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer,
 } from 'recharts';
 import { seasons, temperatureData } from '../../data/dubna';
 import { useInView } from '../../hooks/useInView';
+
+const SEASON_ICONS: Record<string, Icon> = {
+  winter: Snowflake,
+  spring: Wind,
+  summer: Sun,
+  autumn: Leaf,
+};
 
 export default function Climate() {
   const [activeSeason, setActiveSeason] = useState('winter');
@@ -76,11 +84,14 @@ export default function Climate() {
                 {/* Icon + temp */}
                 <div className="flex items-center gap-6 mb-6">
                   <div
-                    className="text-7xl select-none"
-                    role="img"
-                    aria-label={current.name}
+                    className="flex-shrink-0 p-4 rounded-2xl"
+                    style={{ background: `${current.color}18`, border: `1px solid ${current.color}30` }}
+                    aria-hidden="true"
                   >
-                    {current.icon}
+                    {(() => {
+                      const SeasonIcon = SEASON_ICONS[current.id] ?? Sun;
+                      return <SeasonIcon size={48} style={{ color: current.color }} weight="duotone" />;
+                    })()}
                   </div>
                   <div>
                     <div

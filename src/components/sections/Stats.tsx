@@ -1,4 +1,4 @@
-import CountUp from 'react-countup';
+import ScrambleNumber from '@/components/ui/ScrambleNumber';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer,
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -53,7 +53,7 @@ export default function Stats() {
 
         {/* Counter cards */}
         <TooltipProvider delayDuration={200}>
-          <div ref={ref} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 mb-20">
+          <div ref={ref} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-white/5 rounded-2xl overflow-hidden mb-20">
             {cityStats.map((stat, i) => (
               <ShadcnTooltip key={stat.label}>
                 <TooltipTrigger asChild>
@@ -61,22 +61,18 @@ export default function Stats() {
                     initial={{ opacity: 0, y: 40 }}
                     animate={inView ? { opacity: 1, y: 0 } : {}}
                     transition={{ delay: i * 0.1 }}
-                    className="bg-bg-card border-t border-b border-white/5 p-6 text-center hover:border-accent-primary/20 transition-all cursor-default
-                               border-r border-r-white/5 last:border-r-0"
+                    className="bg-bg-card p-6 text-center hover:bg-white/[0.04] transition-colors duration-200 cursor-default"
                   >
                     <div
                       className="text-accent-primary font-bold leading-none mb-2"
                       style={{ fontFamily: '"IBM Plex Mono", monospace', fontSize: 'clamp(24px, 3vw, 40px)' }}
                     >
-                      {inView ? (
-                        <CountUp
-                          start={0}
-                          end={stat.value}
-                          duration={2.5}
-                          separator=" "
-                          delay={i * 0.1}
-                        />
-                      ) : '0'}
+                      <ScrambleNumber
+                        value={stat.value}
+                        active={inView}
+                        separator={stat.label === 'Год основания' ? '' : ' '}
+                        delay={i * 100}
+                      />
                       {stat.suffix && (
                         <span className="text-accent-secondary text-base ml-1">{stat.suffix}</span>
                       )}

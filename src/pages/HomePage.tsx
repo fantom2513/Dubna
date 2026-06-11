@@ -8,19 +8,29 @@ import Architecture from '@/components/sections/Architecture';
 import Climate from '@/components/sections/Climate';
 import Gallery from '@/components/sections/Gallery';
 import Map from '@/components/sections/Map';
+import SectionDivider from '@/components/ui/SectionDivider';
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <SectionDivider />
       <About />
+      <SectionDivider flipped />
       <Stats />
+      <SectionDivider />
       <LiveDashboard />
+      <SectionDivider flipped />
       <Attractions />
+      <SectionDivider />
       <Science />
+      <SectionDivider flipped />
       <Architecture />
+      <SectionDivider />
       <Climate />
+      <SectionDivider flipped />
       <Gallery />
+      <SectionDivider />
       <Map />
     </>
   );

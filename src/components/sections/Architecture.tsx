@@ -197,10 +197,7 @@ export default function Architecture() {
         </motion.p>
 
         {/* Gallery grid */}
-        <div
-          className="grid gap-4"
-          style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {architectureItems.map((item, i) => (
             <GalleryItem key={item.id} item={item} index={i} onOpen={setOpenItem} />
           ))}

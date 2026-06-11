@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ScrollProgressBar from '../ui/ScrollProgressBar';
+import ConstellationBackground from '../ui/ConstellationBackground';
 import { getLenis } from '@/lib/lenis';
 
 export default function SharedLayout() {
@@ -19,21 +20,25 @@ export default function SharedLayout() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-bg-primary">
-      <ScrollProgressBar />
-      <Navbar />
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={location.pathname}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
-        >
-          <Outlet />
-        </motion.main>
-      </AnimatePresence>
-      <Footer />
+    <div className="relative min-h-screen bg-bg-primary">
+      <ConstellationBackground />
+      {/* All UI sits above the canvas */}
+      <div className="relative" style={{ zIndex: 1 }}>
+        <ScrollProgressBar />
+        <Navbar />
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={location.pathname}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <Outlet />
+          </motion.main>
+        </AnimatePresence>
+        <Footer />
+      </div>
     </div>
   );
 }

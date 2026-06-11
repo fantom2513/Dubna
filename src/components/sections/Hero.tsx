@@ -1,8 +1,10 @@
 import { useRef, useMemo, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { CaretDown } from '@phosphor-icons/react';
+import Magnetic from '@/components/ui/Magnetic';
 import { images } from '@/data/images';
 
 // Starfield
@@ -154,7 +156,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-bg-primary">
+    <section className="relative w-full h-screen overflow-hidden bg-bg-primary" style={{ backgroundColor: '#07090f' }}>
       {/* Background photo (z-0) */}
       <img
         src={images.hero}
@@ -257,6 +259,28 @@ export default function Hero() {
               <span className="text-text-secondary text-xs">{b.label}</span>
             </div>
           ))}
+        </motion.div>
+
+        {/* CTA Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 2.2 }}
+          className="flex flex-wrap items-center justify-center gap-4 mt-10"
+        >
+          <Magnetic strength={0.5}>
+            <button
+              className="btn-primary"
+              onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Открыть город
+            </button>
+          </Magnetic>
+          <Magnetic strength={0.5}>
+            <Link to="/gallery" className="btn-ghost">
+              Фотогалерея
+            </Link>
+          </Magnetic>
         </motion.div>
 
         {/* Scroll indicator — hides on first scroll */}

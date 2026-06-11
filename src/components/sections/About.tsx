@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useInView';
 import { images } from '@/data/images';
+import TiltCard from '@/components/ui/TiltCard';
 
 // Subtle background images for cards (null = no bg photo)
 const blockImages: Record<string, string | null> = {
@@ -138,8 +139,17 @@ function AboutBlock({ block, index }: { block: Block; index: number }) {
       initial={{ opacity: 0, y: 60 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, delay: index * 0.15 }}
-      className="relative bg-bg-card border border-white/5 rounded-2xl p-8 hover:border-accent-primary/20 transition-all duration-500 overflow-hidden"
     >
+      <TiltCard
+        max={7}
+        className="relative bg-bg-card border border-white/8 rounded-2xl p-8 hover:border-white/15 transition-colors duration-500 overflow-hidden group h-full"
+        style={{ boxShadow: '0 4px 32px rgba(0,0,0,0.35)' }}
+      >
+      {/* Colored gradient accent across the top */}
+      <div
+        className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl"
+        style={{ background: `linear-gradient(90deg, transparent, ${block.color}90, transparent)` }}
+      />
       {/* Subtle background photo */}
       {blockImages[block.id] && (
         <img
@@ -213,6 +223,7 @@ function AboutBlock({ block, index }: { block: Block; index: number }) {
           ))}
         </div>
       )}
+      </TiltCard>
     </motion.div>
   );
 }
