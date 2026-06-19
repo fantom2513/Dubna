@@ -4,6 +4,7 @@ import Stats from '@/components/sections/Stats';
 import LiveDashboard from '@/components/sections/LiveDashboard';
 import Attractions from '@/components/sections/Attractions';
 import Science from '@/components/sections/Science';
+import ElementSpotlight from '@/components/sections/ElementSpotlight';
 import Architecture from '@/components/sections/Architecture';
 import Climate from '@/components/sections/Climate';
 import Gallery from '@/components/sections/Gallery';
@@ -16,21 +17,15 @@ export default function HomePage() {
       <Hero />
       <SectionDivider />
       <About />
-      <SectionDivider flipped />
       <Stats />
-      <SectionDivider />
       <LiveDashboard />
-      <SectionDivider flipped />
       <Attractions />
-      <SectionDivider />
       <Science />
-      <SectionDivider flipped />
+      <ElementSpotlight />
       <Architecture />
-      <SectionDivider />
       <Climate />
       <SectionDivider flipped />
       <Gallery />
-      <SectionDivider />
       <Map />
     </>
   );
