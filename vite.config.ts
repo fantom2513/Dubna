@@ -10,4 +10,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    // Bind explicitly to IPv4 loopback — on Windows `localhost` may resolve to
+    // IPv6 (::1) while Vite listens on IPv4, leaving the page unreachable.
+    host: '127.0.0.1',
+    port: 5173,
+    strictPort: false,
+  },
 })

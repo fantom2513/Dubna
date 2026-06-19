@@ -30,3 +30,5 @@ ssh*
 *.njsproj
 *.sln
 *.sw?
+
+dev-server.log
