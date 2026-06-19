@@ -49,5 +49,11 @@ export const galleryImages: GalleryItem[] = [
   { src: images.oez,           alt: 'Ядерный университет',   title: 'Университет «Дубна»' },
   { src: images.living,        alt: 'Волга и канал',         title: 'Берег Волги' },
   { src: '/images/bug_chair.webp', alt: 'Большой стул',     title: 'Арт-объект днём' },
-  { src: images.science,       alt: 'ОИЯИ',                  title: 'ОИЯИ — центр науки' },
+  { src: '/images/human_univercity.jpg', alt: 'Университет «Дубна»', title: 'Университет «Дубна»' },
+  // Городские виды — Wikimedia Commons (CC BY 4.0), сохранены локально
+  { src: '/images/wiki_dubna_building.jpg', alt: 'Жилой дом Дубны',  title: 'Городская застройка' },
+  { src: '/images/wiki_dubna_05.jpg', alt: 'Вид Дубны',             title: 'Улицы Дубны' },
+  { src: '/images/wiki_dubna_08.jpg', alt: 'Вид Дубны',             title: 'Городской пейзаж' },
+  { src: '/images/wiki_dubna_12.jpg', alt: 'Вид Дубны',             title: 'Виды наукограда' },
+  { src: '/images/wiki_dubna_31.jpg', alt: 'Вид Дубны',             title: 'Дубна с высоты' },
 ];

@@ -268,13 +268,14 @@ export const seasons: Season[] = [
 ];
 
 // Architecture gallery items
+// Реальные фото архитектуры Дубны — Wikimedia Commons (CC BY-SA), сохранены локально.
 export const architectureItems: ArchitectureItem[] = [
-  { id: 'arch1', name: 'Главпочтамт Дубны', year: '1950-е', gradient: 'from-gray-800 to-gray-900', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Dubna_post_office.jpg/800px-Dubna_post_office.jpg' },
-  { id: 'arch2', name: 'ДК «Мир»', year: '1954', gradient: 'from-slate-700 to-slate-900', colSpan: 2, imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/DK_Mir_Dubna.jpg/800px-DK_Mir_Dubna.jpg' },
-  { id: 'arch3', name: 'Жилые дома улицы Мира', year: '1955–1960', gradient: 'from-zinc-700 to-zinc-900', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Dubna_street_Mira.jpg/800px-Dubna_street_Mira.jpg' },
-  { id: 'arch4', name: 'Кинотеатр «Октябрь»', year: '1957', gradient: 'from-stone-700 to-stone-900', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Dubna_cinema_Oktyabr.jpg/800px-Dubna_cinema_Oktyabr.jpg' },
-  { id: 'arch5', name: 'Административные здания', year: '1952–1958', gradient: 'from-neutral-700 to-neutral-900', colSpan: 2, imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Dubna_admin_buildings.jpg/800px-Dubna_admin_buildings.jpg' },
-  { id: 'arch6', name: 'Набережная правого берега', year: '1950-е', gradient: 'from-gray-700 to-gray-950', imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Dubna_embankment.jpg/800px-Dubna_embankment.jpg' },
+  { id: 'arch1', name: 'Проспект Боголюбова', year: '1950–60-е', gradient: 'from-gray-800 to-gray-900', imageUrl: '/images/arch_bogolyubov.jpg' },
+  { id: 'arch2', name: 'Улица Мира', year: '1950-е', gradient: 'from-slate-700 to-slate-900', colSpan: 2, imageUrl: '/images/arch_mir_street.jpg' },
+  { id: 'arch3', name: 'Жилой дом', year: '1950-е', gradient: 'from-zinc-700 to-zinc-900', imageUrl: '/images/arch_house.jpg' },
+  { id: 'arch4', name: 'Библиотека на ул. Володарского', year: '1950-е', gradient: 'from-stone-700 to-stone-900', imageUrl: '/images/arch_library.jpg' },
+  { id: 'arch5', name: 'Улица Вавилова', year: '1950–60-е', gradient: 'from-neutral-700 to-neutral-900', colSpan: 2, imageUrl: '/images/arch_vavilov.jpg' },
+  { id: 'arch6', name: 'Архитектура 1960-х', year: '1960-е', gradient: 'from-gray-700 to-gray-950', imageUrl: '/images/arch_1960s.jpg' },
 ];
 
 // Radar chart data

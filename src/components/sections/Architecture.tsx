@@ -164,7 +164,7 @@ export default function Architecture() {
     <section id="architecture" className="bg-bg-primary py-32 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <SectionHeader eyebrow="Правый берег · 1950-е" title="Застывшее время" accent="secondary" className="mb-4" />
+        <SectionHeader eyebrow="Архитектура · 1950–60-е" title="Застывшее время" accent="secondary" className="mb-4" />
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
