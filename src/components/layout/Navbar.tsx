@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   List,
   X,
@@ -132,7 +133,7 @@ export default function Navbar() {
                     {link.label}
                     {isActive && (
                       <motion.span
-                        layoutId="nav-indicator"
+                        layoutId="nav-indicator-center"
                         className="absolute -bottom-1 left-0 right-0 h-px bg-accent-primary"
                       />
                     )}
@@ -156,7 +157,7 @@ export default function Navbar() {
                     {link.label}
                     {isActive && (
                       <motion.span
-                        layoutId="nav-indicator"
+                        layoutId="nav-indicator-right"
                         className="absolute -bottom-1 left-0 right-0 h-px bg-accent-primary"
                       />
                     )}
@@ -166,13 +167,31 @@ export default function Navbar() {
             ))}
 
             {/* Live indicator */}
-            <span className="flex items-center gap-1.5 text-[10px] text-emerald-400" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative rounded-full h-1.5 w-1.5 bg-emerald-400" />
-              </span>
-              LIVE
-            </span>
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="flex items-center gap-1.5 text-[10px] text-emerald-400" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative rounded-full h-1.5 w-1.5 bg-emerald-400" />
+                    </span>
+                    LIVE
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent
+                  style={{
+                    background: 'var(--glass-bg)',
+                    border: '1px solid var(--glass-border)',
+                    backdropFilter: 'blur(12px)',
+                    color: 'var(--foreground)',
+                    fontFamily: '"IBM Plex Mono", monospace',
+                    fontSize: '11px',
+                  }}
+                >
+                  Данные обновляются в реальном времени
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
             {/* ⌘K button */}
             <button
