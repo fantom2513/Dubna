@@ -35,7 +35,7 @@ export default function Stats() {
 
         {/* Counter cards */}
         <TooltipProvider delayDuration={200}>
-          <div ref={ref} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-white/5 rounded-2xl overflow-hidden mb-20">
+          <div ref={ref} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[1px] bg-white/5 rounded-2xl overflow-hidden mb-20">
             {cityStats.map((stat, i) => (
               <ShadcnTooltip key={stat.label}>
                 <TooltipTrigger asChild>
@@ -105,6 +105,16 @@ export default function Stats() {
             <ResponsiveContainer width="100%" height={280}>
               <RadarChart data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
                 <PolarGrid stroke="rgba(255,255,255,0.07)" />
+                <Tooltip
+                  contentStyle={{
+                    background: '#131a28',
+                    border: '1px solid rgba(79,195,247,0.2)',
+                    borderRadius: '8px',
+                    color: '#e8edf5',
+                    fontFamily: '"IBM Plex Mono", monospace',
+                    fontSize: '12px',
+                  }}
+                />
                 <PolarAngleAxis
                   dataKey="subject"
                   tick={{ fill: '#8a9bbf', fontSize: 11, fontFamily: '"IBM Plex Mono", monospace' }}

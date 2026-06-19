@@ -152,7 +152,7 @@ function AboutBlock({ block, index }: { block: Block; index: number }) {
       >
         {block.title}
       </h3>
-      <p className="text-text-secondary text-sm leading-relaxed mb-6">{block.content}</p>
+      <p className="text-text-secondary text-[15px] leading-relaxed mb-6">{block.content}</p>
 
       {/* Timeline */}
       {block.timeline && (

@@ -10,7 +10,7 @@ export default function Attractions() {
         <SectionHeader eyebrow="Что посмотреть" title="Достопримечательности" className="mb-16" />
 
         {/* Masonry grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-[220px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto md:auto-rows-[240px]">
           {attractions.map((attraction, i) => (
             <AttractionCard key={attraction.id} attraction={attraction} index={i} />
           ))}

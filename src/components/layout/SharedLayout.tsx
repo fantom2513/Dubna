@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import BackToTop from '../ui/BackToTop';
 import ScrollProgressBar from '../ui/ScrollProgressBar';
 import ConstellationBackground from '../ui/ConstellationBackground';
 import { getLenis } from '@/lib/lenis';
@@ -40,6 +41,7 @@ export default function SharedLayout() {
           </motion.main>
         </AnimatePresence>
         <Footer />
+        <BackToTop />
       </div>
     </div>
   );

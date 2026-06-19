@@ -54,6 +54,7 @@ const socials = [
 ] as const;
 
 export default function Footer() {
+  const year = new Date().getFullYear();
   const scrollToAnchor = useSmoothAnchor();
 
   return (
@@ -218,7 +219,7 @@ export default function Footer() {
               className="text-xs text-text-secondary"
               style={{ fontFamily: '"IBM Plex Mono", monospace' }}
             >
-              © 2024 Дубна — Город будущего
+              © {year} Дубна — Город будущего
             </span>
           </div>
 
