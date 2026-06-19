@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { MotionConfig } from 'framer-motion';
 import Lenis from 'lenis';
 import { Toaster } from 'sonner';
 
@@ -40,7 +41,7 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <MotionConfig reducedMotion="user">
       <CustomCursor />
       <CommandPalette />
       <Routes>
@@ -68,6 +69,6 @@ export default function App() {
           },
         }}
       />
-    </>
+    </MotionConfig>
   );
 }

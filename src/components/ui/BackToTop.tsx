@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ArrowUp } from '@phosphor-icons/react';
+import { getLenis } from '@/lib/lenis';
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -17,8 +18,14 @@ export default function BackToTop() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const toTop = () =>
-    window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+  const toTop = () => {
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: !!reduced });
+    } else {
+      window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });
+    }
+  };
 
   return (
     <AnimatePresence>
