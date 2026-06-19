@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Train as TrainIcon } from '@phosphor-icons/react';
 import { useTrainSchedule, type Train } from '../../hooks/api/useTrainSchedule';
 import WidgetCard from '../ui/WidgetCard';
 
@@ -87,7 +88,7 @@ export default function TrainScheduleWidget() {
   return (
     <WidgetCard
       title="Электрички · Мск→Дубна"
-      icon="🚆"
+      icon={<TrainIcon size={18} weight="duotone" className="text-accent-primary" />}
       isLoading={isLoading}
       error={error ? 'Нет данных о расписании' : null}
       onRetry={() => refetch()}

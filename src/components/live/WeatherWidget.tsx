@@ -1,8 +1,42 @@
+import type { ComponentType } from 'react';
+import {
+  Sun, CloudSun, Cloud, CloudFog, CloudRain, CloudSnow, CloudLightning,
+  Wind, Drop, ThermometerSimple, SunHorizon, type IconProps,
+} from '@phosphor-icons/react';
 import { useWeather, getWeatherInfo } from '../../hooks/api/useWeather';
 import WidgetCard from '../ui/WidgetCard';
-import {
-  LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip,
-} from 'recharts';
+
+type PhIcon = ComponentType<IconProps>;
+
+// Weather-code → SVG icon + accent color (no emoji — design-system rule).
+function weatherVisual(code: number): { Icon: PhIcon; color: string } {
+  const GOLD = '#e8b84b';
+  const BLUE = '#4fc3f7';
+  const SNOW = '#bcd7ee';
+  const GREY = '#8a9bbf';
+  if (code === 0) return { Icon: Sun, color: GOLD };
+  if (code === 1 || code === 2) return { Icon: CloudSun, color: GOLD };
+  if (code === 3) return { Icon: Cloud, color: GREY };
+  if (code === 45 || code === 48) return { Icon: CloudFog, color: GREY };
+  if (code >= 51 && code <= 65) return { Icon: CloudRain, color: BLUE };
+  if (code >= 71 && code <= 77) return { Icon: CloudSnow, color: SNOW };
+  if (code === 80 || code === 81 || code === 82) return { Icon: CloudRain, color: BLUE };
+  if (code === 85 || code === 86) return { Icon: CloudSnow, color: SNOW };
+  if (code >= 95) return { Icon: CloudLightning, color: BLUE };
+  return { Icon: Cloud, color: GREY };
+}
+
+const mono = { fontFamily: '"IBM Plex Mono", monospace' } as const;
+
+function Metric({ Icon, value, label }: { Icon: PhIcon; value: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 flex-1 py-2.5 rounded-xl bg-white/[0.03]">
+      <Icon size={16} weight="regular" className="text-accent-primary/80" />
+      <span className="text-text-primary text-sm font-bold" style={mono}>{value}</span>
+      <span className="text-text-secondary text-[10px] uppercase tracking-wider" style={mono}>{label}</span>
+    </div>
+  );
+}
 
 function SunArc({ sunrise, sunset }: { sunrise: string; sunset: string }) {
   const now = new Date();
@@ -12,41 +46,43 @@ function SunArc({ sunrise, sunset }: { sunrise: string; sunset: string }) {
   const elapsed = now.getTime() - riseTime.getTime();
   const progress = Math.max(0, Math.min(1, elapsed / total));
 
-  // SVG arc: from left to right, semicircle (viewBox coords)
-  const cx = 80; const cy = 48; const r = 42;
-  const startAngle = Math.PI;
-  const endAngle = 0;
-  const t = startAngle + (endAngle - startAngle) * progress;
+  const cx = 80, cy = 48, r = 42;
+  const t = Math.PI + (0 - Math.PI) * progress;
   const dotX = cx + r * Math.cos(t);
   const dotY = cy - r * Math.sin(t);
+  const isDay = progress > 0 && progress < 1;
 
-  const fmt = (d: Date) => d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false });
+  const fmt = (d: Date) =>
+    d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   return (
     <div className="relative w-full">
       <svg className="w-full h-auto" viewBox="0 0 160 56" preserveAspectRatio="xMidYMid meet">
+        <line x1={cx - r - 6} y1={cy} x2={cx + r + 6} y2={cy} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
         <path
           d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
-          fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth="2"
+          fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2" strokeDasharray="2 3"
         />
         {progress > 0 && (
           <path
             d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${dotX} ${dotY}`}
-            fill="none"
-            stroke="#e8b84b"
-            strokeWidth="2"
-            strokeLinecap="round"
+            fill="none" stroke="#e8b84b" strokeWidth="2" strokeLinecap="round"
           />
         )}
-        <circle cx={dotX} cy={dotY} r="5" fill="#e8b84b" />
-        <circle cx={dotX} cy={dotY} r="9" fill="rgba(232,184,75,0.2)" />
-        <line x1={cx - r - 6} y1={cy} x2={cx + r + 6} y2={cy} stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+        {isDay && (
+          <>
+            <circle cx={dotX} cy={dotY} r="9" fill="rgba(232,184,75,0.2)" />
+            <circle cx={dotX} cy={dotY} r="4.5" fill="#e8b84b" />
+          </>
+        )}
       </svg>
-      <div className="flex justify-between text-[10px] mt-1" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
-        <span className="text-text-secondary">🌅 {fmt(riseTime)}</span>
-        <span className="text-text-secondary">🌇 {fmt(setTime)}</span>
+      <div className="flex justify-between text-[10px] mt-0.5" style={mono}>
+        <span className="flex items-center gap-1 text-text-secondary">
+          <SunHorizon size={12} className="text-accent-secondary" /> {fmt(riseTime)}
+        </span>
+        <span className="flex items-center gap-1 text-text-secondary">
+          {fmt(setTime)} <SunHorizon size={12} weight="fill" className="text-accent-secondary/70" />
+        </span>
       </div>
     </div>
   );
@@ -54,13 +90,12 @@ function SunArc({ sunrise, sunset }: { sunrise: string; sunset: string }) {
 
 export default function WeatherWidget() {
   const { data, isLoading, error, refetch } = useWeather();
-
   const errorMessage = error ? 'Не удалось загрузить погоду' : null;
 
   return (
     <WidgetCard
       title="Погода · Дубна"
-      icon="🌡️"
+      icon={<ThermometerSimple size={18} className="text-accent-primary" />}
       isLive
       isLoading={isLoading}
       error={errorMessage}
@@ -70,184 +105,140 @@ export default function WeatherWidget() {
       {data && (() => {
         const weather = data.current;
         const info = getWeatherInfo(weather.weather_code);
+        const { Icon: BigIcon, color } = weatherVisual(weather.weather_code);
         const daily = data.daily;
         const hourly = data.hourly;
 
-        // Hourly: next 24 hours from current hour
+        const hourTop = new Date(new Date().setMinutes(0, 0, 0));
         const hourlyItems = hourly.time
           .map((t, i) => ({
             time: new Date(t),
             temp: hourly.temperature_2m[i],
             precip: hourly.precipitation_probability[i],
-            weatherCode: hourly.weather_code[i],
+            code: hourly.weather_code[i],
           }))
-          .filter((h) => h.time > new Date(new Date().setMinutes(0, 0, 0)))
-          .slice(0, 24);
+          .filter((h) => h.time > hourTop)
+          .slice(0, 12);
 
-        // 7-day chart data
-        const chartData = daily.time.map((t, i) => ({
-          day: new Date(t).toLocaleDateString('ru-RU', { weekday: 'short' }),
-          max: daily.temperature_2m_max[i],
-          min: daily.temperature_2m_min[i],
-        }));
+        // Week temp range for the 7-day range bars
+        const weekMin = Math.min(...daily.temperature_2m_min.slice(0, 7));
+        const weekMax = Math.max(...daily.temperature_2m_max.slice(0, 7));
+        const span = Math.max(1, weekMax - weekMin);
 
         return (
-          <div className="space-y-4">
-            {/* Current weather */}
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="text-7xl select-none leading-none mb-1" role="img" aria-label={info.label}>
-                  {info.icon}
-                </div>
-                <div
-                  className="text-5xl font-bold text-text-primary leading-none"
-                  style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                >
-                  {Math.round(weather.temperature_2m)}°
-                </div>
-                <div className="text-text-secondary text-sm mt-1">{info.label}</div>
+          <div className="space-y-5">
+            {/* Hero: condition + temperature */}
+            <div className="flex items-center gap-4">
+              <div
+                className="flex items-center justify-center w-20 h-20 rounded-2xl shrink-0"
+                style={{ background: `radial-gradient(circle at 50% 40%, ${color}22, transparent 70%)` }}
+              >
+                <BigIcon size={56} weight="duotone" style={{ color }} aria-label={info.label} />
               </div>
-              <div className="text-right space-y-1.5">
-                <div className="text-text-secondary text-xs">
-                  Ощущается <span className="text-text-primary" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
-                    {Math.round(weather.apparent_temperature)}°
+              <div className="min-w-0">
+                <div className="flex items-start gap-0.5">
+                  <span className="text-text-primary font-bold leading-none" style={{ ...mono, fontSize: 'clamp(2.75rem, 9vw, 3.5rem)' }}>
+                    {Math.round(weather.temperature_2m)}
                   </span>
+                  <span className="text-accent-primary text-2xl leading-none mt-1" style={mono}>°</span>
                 </div>
-                <div className="text-text-secondary text-xs">
-                  💨 <span className="text-text-primary" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
-                    {Math.round(weather.wind_speed_10m)} км/ч
-                  </span>
-                </div>
-                <div className="text-text-secondary text-xs">
-                  💧 <span className="text-text-primary" style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
-                    {weather.relative_humidity_2m}%
-                  </span>
+                <div className="text-text-primary text-sm mt-1 truncate">{info.label}</div>
+                <div className="text-text-secondary text-xs mt-0.5">
+                  Ощущается {Math.round(weather.apparent_temperature)}°
                 </div>
               </div>
             </div>
 
-            {/* Sunrise/sunset arc */}
+            {/* Metric chips */}
+            <div className="flex gap-2">
+              <Metric Icon={Wind} value={`${Math.round(weather.wind_speed_10m)}`} label="км/ч" />
+              <Metric Icon={Drop} value={`${weather.relative_humidity_2m}%`} label="влажн." />
+              <Metric Icon={ThermometerSimple} value={`${Math.round(weather.apparent_temperature)}°`} label="ощущ." />
+            </div>
+
+            {/* Sun arc */}
             {daily.sunrise[0] && daily.sunset[0] && (
               <SunArc sunrise={daily.sunrise[0]} sunset={daily.sunset[0]} />
             )}
 
-            {/* Hourly scroll */}
+            {/* Hourly */}
             {hourlyItems.length > 0 && (
               <div>
-                <p
-                  className="text-[10px] uppercase tracking-[0.2em] text-text-secondary mb-2"
-                  style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                >
+                <p className="text-[10px] uppercase tracking-[0.2em] text-text-secondary mb-2.5" style={mono}>
                   Почасовой прогноз
                 </p>
-                <div className="overflow-x-auto">
-                  <div className="flex gap-3 pb-2" style={{ minWidth: 'max-content' }}>
-                    {hourlyItems.map((h, i) => (
-                      <div key={i} className="flex flex-col items-center gap-1 min-w-[44px]">
-                        <span
-                          className="text-[10px] text-text-secondary"
-                          style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+                <div className="overflow-x-auto -mx-1 px-1">
+                  <div className="flex gap-2" style={{ minWidth: 'max-content' }}>
+                    {hourlyItems.map((h, i) => {
+                      const v = weatherVisual(h.code);
+                      return (
+                        <div
+                          key={i}
+                          className="flex flex-col items-center gap-1.5 min-w-[46px] py-2.5 rounded-xl bg-white/[0.03]"
                         >
-                          {h.time.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false })}
-                        </span>
-                        <span className="text-lg select-none" role="img" aria-hidden="true">
-                          {getWeatherInfo(h.weatherCode).icon}
-                        </span>
-                        <span
-                          className="text-xs text-text-primary font-bold"
-                          style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                        >
-                          {Math.round(h.temp)}°
-                        </span>
-                        <span
-                          className="text-[10px]"
-                          style={{
-                            color: h.precip > 50 ? '#4fc3f7' : '#8a9bbf',
-                            fontFamily: '"IBM Plex Mono", monospace',
-                          }}
-                        >
-                          {h.precip}%
-                        </span>
-                      </div>
-                    ))}
+                          <span className="text-[10px] text-text-secondary" style={mono}>
+                            {h.time.toLocaleTimeString('ru-RU', { hour: '2-digit', hour12: false })}
+                          </span>
+                          <v.Icon size={20} weight="fill" style={{ color: v.color }} />
+                          <span className="text-xs text-text-primary font-bold" style={mono}>
+                            {Math.round(h.temp)}°
+                          </span>
+                          <span
+                            className="flex items-center gap-0.5 text-[9px]"
+                            style={{ ...mono, color: h.precip > 40 ? '#4fc3f7' : '#6b7a99' }}
+                          >
+                            <Drop size={9} weight="fill" />{h.precip}%
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* 7-day forecast */}
+            {/* 7-day with temperature range bars */}
             <div>
-              <p
-                className="text-[10px] uppercase tracking-[0.2em] text-text-secondary mb-2"
-                style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-              >
+              <p className="text-[10px] uppercase tracking-[0.2em] text-text-secondary mb-2.5" style={mono}>
                 7 дней
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 {daily.time.slice(0, 7).map((t, i) => {
-                  const precip = daily.precipitation_probability_max[i] ?? 0;
-                  const winfo = getWeatherInfo(daily.weather_code[i]);
+                  const dMin = daily.temperature_2m_min[i];
+                  const dMax = daily.temperature_2m_max[i];
+                  const left = ((dMin - weekMin) / span) * 100;
+                  const width = Math.max(8, ((dMax - dMin) / span) * 100);
+                  const v = weatherVisual(daily.weather_code[i]);
+                  const isToday = i === 0;
                   return (
-                    <div key={t} className="flex items-center gap-2">
+                    <div key={t} className="flex items-center gap-3">
                       <span
-                        className="text-[11px] text-text-secondary w-8 shrink-0 capitalize"
-                        style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+                        className={`text-[11px] w-9 shrink-0 capitalize ${isToday ? 'text-text-primary font-bold' : 'text-text-secondary'}`}
+                        style={mono}
                       >
                         {new Date(t).toLocaleDateString('ru-RU', { weekday: 'short' })}
                       </span>
-                      <span className="text-sm select-none w-6 shrink-0" role="img" aria-hidden="true">
-                        {winfo.icon}
+                      <v.Icon size={16} weight="fill" className="shrink-0" style={{ color: v.color }} />
+                      <span className="text-[11px] text-text-secondary w-7 text-right shrink-0" style={mono}>
+                        {Math.round(dMin)}°
                       </span>
-                      <span
-                        className="text-[11px] text-text-secondary w-8 shrink-0"
-                        style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                      >
-                        {Math.round(daily.temperature_2m_min[i])}°
-                      </span>
-                      <div className="flex-1 h-1 rounded-full bg-white/5 overflow-hidden">
+                      <div className="relative flex-1 h-1.5 rounded-full bg-white/[0.06]">
                         <div
-                          className="h-full rounded-full bg-accent-primary/60"
-                          style={{ width: `${precip}%` }}
+                          className="absolute h-full rounded-full"
+                          style={{
+                            left: `${left}%`,
+                            width: `${width}%`,
+                            background: 'linear-gradient(90deg, #4fc3f7, #e8b84b)',
+                          }}
                         />
                       </div>
-                      <span
-                        className="text-[11px] text-accent-primary w-8 text-right shrink-0"
-                        style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                      >
-                        {Math.round(daily.temperature_2m_max[i])}°
+                      <span className="text-[11px] text-text-primary w-7 shrink-0" style={mono}>
+                        {Math.round(dMax)}°
                       </span>
                     </div>
                   );
                 })}
               </div>
-            </div>
-
-            {/* Mini chart */}
-            <div>
-              <ResponsiveContainer width="100%" height={80}>
-                <LineChart data={chartData} margin={{ top: 5, right: 5, bottom: 0, left: -20 }}>
-                  <XAxis
-                    dataKey="day"
-                    tick={{ fill: '#8a9bbf', fontSize: 9, fontFamily: '"IBM Plex Mono", monospace' }}
-                    tickLine={false}
-                    axisLine={false}
-                    interval={0}
-                  />
-                  <YAxis hide />
-                  <Tooltip
-                    contentStyle={{
-                      background: '#131a28',
-                      border: '1px solid rgba(79,195,247,0.2)',
-                      borderRadius: '6px',
-                      fontSize: '11px',
-                      fontFamily: '"IBM Plex Mono", monospace',
-                    }}
-                    formatter={(v: number | undefined) => v !== undefined ? [`${v}°C`, ''] : ['', '']}
-                  />
-                  <Line type="monotone" dataKey="max" stroke="#e8b84b" strokeWidth={1.5} dot={false} activeDot={false} />
-                  <Line type="monotone" dataKey="min" stroke="#4fc3f7" strokeWidth={1.5} dot={false} activeDot={false} />
-                </LineChart>
-              </ResponsiveContainer>
             </div>
           </div>
         );

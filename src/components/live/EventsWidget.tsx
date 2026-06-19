@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CalendarBlank } from '@phosphor-icons/react';
 import { useEvents, eventCategories, getCategoryInfo, formatEventDate } from '../../hooks/api/useEvents';
 import WidgetCard from '../ui/WidgetCard';
 
@@ -15,7 +16,7 @@ export default function EventsWidget() {
   return (
     <WidgetCard
       title="Афиша Москвы"
-      icon="📅"
+      icon={<CalendarBlank size={18} weight="duotone" className="text-accent-primary" />}
       isLoading={isLoading}
       error={error ? 'Не удалось загрузить события' : null}
       onRetry={() => refetch()}

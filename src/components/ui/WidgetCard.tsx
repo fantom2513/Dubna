@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { WarningCircle, ArrowClockwise } from '@phosphor-icons/react';
 
 interface WidgetCardProps {
   title: string;
-  icon: string;
+  icon: ReactNode;
   isLive?: boolean;
   isLoading?: boolean;
   error?: string | null;
@@ -86,15 +87,18 @@ function SkeletonLoader() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-6 text-center flex-1">
-      <span className="text-2xl" role="img" aria-label="error">⚠️</span>
-      <p className="text-text-secondary text-xs max-w-[200px]">{message}</p>
+    <div className="flex flex-col items-center justify-center gap-3 py-10 text-center flex-1">
+      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white/[0.04] border border-white/5">
+        <WarningCircle size={24} weight="duotone" className="text-text-secondary" />
+      </div>
+      <p className="text-text-secondary text-xs max-w-[200px] leading-relaxed">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="text-xs text-accent-primary hover:text-text-primary transition-colors border border-accent-primary/30 rounded-full px-4 py-1.5"
+          className="flex items-center gap-1.5 text-xs text-accent-primary hover:text-bg-primary hover:bg-accent-primary transition-colors border border-accent-primary/30 rounded-full px-4 py-1.5"
           style={{ fontFamily: '"IBM Plex Mono", monospace' }}
         >
+          <ArrowClockwise size={13} weight="bold" />
           Повторить
         </button>
       )}

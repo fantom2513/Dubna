@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Planet } from '@phosphor-icons/react';
 import { useISSTracker } from '../../hooks/api/useISSTracker';
 import WidgetCard from '../ui/WidgetCard';
+import StatTile from '../ui/StatTile';
 
 // Map lat/lon to SVG coords (equirectangular projection)
 function latLonToSVG(lat: number, lon: number, width: number, height: number) {
@@ -117,7 +119,7 @@ export default function ISSTrackerWidget() {
   return (
     <WidgetCard
       title="МКС в реальном времени"
-      icon="🛸"
+      icon={<Planet size={18} weight="duotone" className="text-accent-primary" />}
       isLive
       isLoading={isLoading}
       error={error ? 'Нет данных о МКС' : null}
@@ -134,27 +136,10 @@ export default function ISSTrackerWidget() {
             <MiniGlobe lat={data.position.latitude} lon={data.position.longitude} />
 
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { label: 'Широта',   value: `${data.position.latitude.toFixed(2)}°N` },
-                { label: 'Долгота',  value: `${data.position.longitude.toFixed(2)}°E` },
-                { label: 'Высота',   value: `${Math.round(data.position.altitude)} км` },
-                { label: 'Скорость', value: `${Math.round(data.position.velocity).toLocaleString('ru')} км/ч` },
-              ].map((item) => (
-                <div key={item.label} className="bg-bg-secondary/50 rounded-lg p-2">
-                  <div
-                    className="text-[10px] text-text-secondary uppercase tracking-wider"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                  >
-                    {item.label}
-                  </div>
-                  <div
-                    className="text-xs font-bold text-text-primary mt-0.5"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                  >
-                    {item.value}
-                  </div>
-                </div>
-              ))}
+              <StatTile label="Широта" value={`${data.position.latitude.toFixed(2)}°N`} />
+              <StatTile label="Долгота" value={`${data.position.longitude.toFixed(2)}°E`} />
+              <StatTile label="Высота" value={`${Math.round(data.position.altitude)} км`} accent="#4fc3f7" />
+              <StatTile label="Скорость" value={`${Math.round(data.position.velocity).toLocaleString('ru')} км/ч`} accent="#4fc3f7" />
             </div>
 
             {data.nextPass && (

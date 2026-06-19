@@ -1,3 +1,4 @@
+import { Newspaper } from '@phosphor-icons/react';
 import { useNews, getRelativeTime } from '../../hooks/api/useNews';
 import WidgetCard from '../ui/WidgetCard';
 
@@ -7,7 +8,7 @@ export default function NewsWidget() {
   return (
     <WidgetCard
       title="Новости Дубны"
-      icon="📰"
+      icon={<Newspaper size={18} weight="duotone" className="text-accent-primary" />}
       isLoading={isLoading}
       error={error ? 'Нет данных о новостях' : null}
       onRetry={() => refetch()}

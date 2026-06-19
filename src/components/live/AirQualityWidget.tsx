@@ -1,5 +1,8 @@
+import { Wind } from '@phosphor-icons/react';
 import { useAirQuality, getAqiLevel } from '../../hooks/api/useAirQuality';
 import WidgetCard from '../ui/WidgetCard';
+
+const mono = { fontFamily: '"IBM Plex Mono", monospace' } as const;
 
 function AqiGauge({ aqi, color }: { aqi: number; color: string }) {
   const radius = 38;
@@ -53,7 +56,7 @@ export default function AirQualityWidget() {
   return (
     <WidgetCard
       title="Качество воздуха"
-      icon="🌍"
+      icon={<Wind size={18} weight="duotone" className="text-accent-primary" />}
       isLoading={isLoading}
       error={error ? 'Нет данных о качестве воздуха' : null}
       onRetry={() => refetch()}
@@ -73,45 +76,38 @@ export default function AirQualityWidget() {
           <div>
             <AqiGauge aqi={c.european_aqi} color={level.color} />
 
-            <div className="text-center mb-4">
-              <div className="text-2xl mb-1" role="img" aria-label={level.label}>
-                {level.emoji}
-              </div>
+            {/* Status pill (replaces emoji smiley) */}
+            <div className="flex flex-col items-center text-center mb-5">
               <div
-                className="text-base font-bold"
-                style={{ fontFamily: '"Cormorant Garamond", serif', color: level.color }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full mb-1.5"
+                style={{ background: `${level.color}1a`, border: `1px solid ${level.color}40` }}
               >
-                {level.label}
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: level.color }} />
+                <span className="text-sm font-bold" style={{ color: level.color, fontFamily: '"Cormorant Garamond", serif' }}>
+                  {level.label}
+                </span>
               </div>
-              <div className="text-text-secondary text-xs mt-1">{level.description}</div>
+              <div className="text-text-secondary text-xs max-w-[220px] leading-relaxed">{level.description}</div>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
-              {pollutants.map((p) => (
-                <div key={p.label} className="bg-bg-secondary/50 rounded-lg p-2">
-                  <div
-                    className="text-[10px] text-text-secondary uppercase tracking-wider"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                  >
-                    {p.label}
+              {pollutants.map((p) => {
+                const over = p.value > p.safe;
+                const pct = Math.min(100, (p.value / p.safe) * 100);
+                const c2 = over ? '#fb923c' : '#4fc3f7';
+                return (
+                  <div key={p.label} className="rounded-xl bg-white/[0.03] border border-white/[0.06] px-3 py-2.5">
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-[10px] text-text-secondary uppercase tracking-wider" style={mono}>{p.label}</span>
+                      <span className="text-[9px] text-text-secondary/70" style={mono}>{p.unit}</span>
+                    </div>
+                    <div className="text-sm font-bold mt-0.5" style={{ ...mono, color: c2 }}>{p.value.toFixed(1)}</div>
+                    <div className="mt-1.5 h-1 rounded-full bg-white/[0.06] overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: c2 }} />
+                    </div>
                   </div>
-                  <div
-                    className="text-sm font-bold mt-0.5"
-                    style={{
-                      fontFamily: '"IBM Plex Mono", monospace',
-                      color: p.value > p.safe ? '#fb923c' : '#4fc3f7',
-                    }}
-                  >
-                    {p.value.toFixed(1)}
-                  </div>
-                  <div
-                    className="text-[9px] text-text-secondary"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-                  >
-                    {p.unit}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         );
