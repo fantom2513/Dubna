@@ -5,7 +5,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ReferenceLine, ResponsiveContainer,
 } from 'recharts';
 import { seasons, temperatureData } from '../../data/dubna';
-import { useInView } from '../../hooks/useInView';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 const SEASON_ICONS: Record<string, Icon> = {
   winter: Snowflake,
@@ -16,7 +16,6 @@ const SEASON_ICONS: Record<string, Icon> = {
 
 export default function Climate() {
   const [activeSeason, setActiveSeason] = useState('winter');
-  const [titleRef, titleInView] = useInView<HTMLDivElement>({ threshold: 0.5 });
 
   const current = seasons.find((s) => s.id === activeSeason) ?? seasons[0];
 
@@ -24,25 +23,7 @@ export default function Climate() {
     <section id="climate" className="bg-bg-secondary py-32 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div ref={titleRef} className="mb-16">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            className="text-accent-primary text-xs tracking-[0.3em] uppercase mb-4"
-            style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-          >
-            Климат и природа
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 }}
-            className="font-cormorant font-bold text-text-primary"
-            style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 'clamp(36px, 5vw, 56px)' }}
-          >
-            Четыре сезона
-          </motion.h2>
-        </div>
+        <SectionHeader eyebrow="Климат и природа" title="Четыре сезона" className="mb-16" />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Left: Season widget */}

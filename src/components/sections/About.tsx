@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useInView } from '../../hooks/useInView';
 import { images } from '@/data/images';
 import TiltCard from '@/components/ui/TiltCard';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 // Subtle background images for cards (null = no bg photo)
 const blockImages: Record<string, string | null> = {
@@ -52,7 +53,6 @@ const blocks = [
 
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [titleRef, titleInView] = useInView<HTMLDivElement>({ threshold: 0.3 });
 
   return (
     <section id="about" ref={sectionRef} className="relative bg-bg-primary py-32 overflow-hidden">
@@ -85,28 +85,7 @@ export default function About() {
 
       <div className="max-w-7xl mx-auto px-6">
         {/* Section header */}
-        <div ref={titleRef} className="mb-20">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            className="text-accent-primary text-xs tracking-[0.3em] uppercase mb-4"
-            style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-          >
-            Анатомия города
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 }}
-            className="font-cormorant font-bold text-text-primary"
-            style={{
-              fontFamily: '"Cormorant Garamond", serif',
-              fontSize: 'clamp(40px, 5vw, 64px)',
-            }}
-          >
-            О городе
-          </motion.h2>
-        </div>
+        <SectionHeader eyebrow="Анатомия города" title="О городе" className="mb-20" />
 
         {/* Blocks */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

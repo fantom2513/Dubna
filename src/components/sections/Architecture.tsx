@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { architectureItems, type ArchitectureItem } from '../../data/dubna';
-import { useInView } from '../../hooks/useInView';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 function GalleryItem({
   item,
@@ -159,36 +159,18 @@ function Lightbox({ item, onClose }: { item: ArchitectureItem; onClose: () => vo
 
 export default function Architecture() {
   const [openItem, setOpenItem] = useState<ArchitectureItem | null>(null);
-  const [titleRef, titleInView] = useInView<HTMLDivElement>({ threshold: 0.5 });
 
   return (
     <section id="architecture" className="bg-bg-primary py-32 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div ref={titleRef} className="mb-4">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            className="text-accent-secondary text-xs tracking-[0.3em] uppercase mb-2"
-            style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-          >
-            Правый берег · 1950-е
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 }}
-            className="font-cormorant font-bold text-text-primary mb-4"
-            style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 'clamp(36px, 5vw, 56px)' }}
-          >
-            Застывшее время
-          </motion.h2>
-        </div>
+        <SectionHeader eyebrow="Правый берег · 1950-е" title="Застывшее время" accent="secondary" className="mb-4" />
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
-          animate={titleInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
           className="text-text-secondary max-w-2xl mb-12 leading-relaxed"
         >
           Правый берег Дубны — уникальный архитектурный заповедник. Сталинский ампир 1950-х годов

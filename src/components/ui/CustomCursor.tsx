@@ -16,6 +16,8 @@ export default function CustomCursor() {
     // Only on desktop
     if (window.matchMedia('(pointer: coarse)').matches) return;
 
+    document.body.classList.add('has-custom-cursor');
+
     const onMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
       if (dotRef.current) {
@@ -69,6 +71,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseover', onEnter);
       document.removeEventListener('mouseout', onLeave);
       cancelAnimationFrame(raf.current);
+      document.body.classList.remove('has-custom-cursor');
     };
   }, []);
 

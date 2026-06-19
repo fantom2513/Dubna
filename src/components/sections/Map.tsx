@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useInView } from '../../hooks/useInView';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 function MapResizer() {
   const map = useMap();
@@ -29,23 +30,7 @@ export default function Map() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Text */}
           <div ref={ref}>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              className="text-accent-primary text-xs tracking-[0.3em] uppercase mb-4"
-              style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-            >
-              Расположение
-            </motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 40 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.15 }}
-              className="font-cormorant font-bold text-text-primary mb-6"
-              style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 'clamp(36px, 5vw, 56px)' }}
-            >
-              Где находится Дубна
-            </motion.h2>
+            <SectionHeader eyebrow="Расположение" title="Где находится Дубна" className="mb-6" />
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}

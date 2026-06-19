@@ -1,4 +1,5 @@
 import ScrambleNumber from '@/components/ui/ScrambleNumber';
+import SectionHeader from '@/components/ui/SectionHeader';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer,
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -25,31 +26,12 @@ const statTooltips: Record<string, string> = {
 
 export default function Stats() {
   const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0.1 });
-  const [titleRef, titleInView] = useInView<HTMLDivElement>({ threshold: 0.5 });
 
   return (
     <section id="stats" className="bg-bg-secondary py-32 px-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div ref={titleRef} className="mb-16">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            className="text-accent-primary text-xs tracking-[0.3em] uppercase mb-4"
-            style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-          >
-            Город в цифрах
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2 }}
-            className="font-cormorant font-bold text-text-primary"
-            style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 'clamp(36px, 5vw, 56px)' }}
-          >
-            Статистика
-          </motion.h2>
-        </div>
+        <SectionHeader eyebrow="Город в цифрах" title="Статистика" className="mb-16" />
 
         {/* Counter cards */}
         <TooltipProvider delayDuration={200}>

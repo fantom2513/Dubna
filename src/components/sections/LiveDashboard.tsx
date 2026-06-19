@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { useQueryClient } from '@tanstack/react-query';
-import { useInView } from '../../hooks/useInView';
 import ErrorBoundary from '../ui/ErrorBoundary';
+import SectionHeader from '@/components/ui/SectionHeader';
 
 import WeatherWidget from '../live/WeatherWidget';
 import AirQualityWidget from '../live/AirQualityWidget';
@@ -73,24 +73,12 @@ function UpdateIndicator() {
 }
 
 export default function LiveDashboard() {
-  const [titleRef, titleInView] = useInView<HTMLDivElement>({ threshold: 0.3 });
-
   return (
     <section id="live" className="bg-bg-secondary py-32 px-6 relative">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div ref={titleRef} className="mb-12">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            className="flex items-center gap-3 mb-4"
-          >
-            <span
-              className="text-accent-primary text-xs tracking-[0.3em] uppercase"
-              style={{ fontFamily: '"IBM Plex Mono", monospace' }}
-            >
-              Дубна сейчас
-            </span>
+        <div className="mb-12">
+          <div className="flex items-center gap-3 mb-4">
             <div className="flex items-center gap-1.5">
               <div className="relative">
                 <div className="w-2 h-2 rounded-full bg-red-500" />
@@ -107,26 +95,11 @@ export default function LiveDashboard() {
                 LIVE
               </span>
             </div>
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            animate={titleInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.15 }}
-            className="font-cormorant font-bold text-text-primary"
-            style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 'clamp(36px, 5vw, 56px)' }}
-          >
-            Живые данные
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={titleInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.25 }}
-            className="text-text-secondary text-sm mt-3 max-w-lg"
-          >
+          </div>
+          <SectionHeader eyebrow="Дубна сейчас" title="Живые данные" />
+          <p className="text-text-secondary text-sm mt-3 max-w-lg">
             Погода, качество воздуха, МКС, события и расписание — всё в реальном времени.
-          </motion.p>
+          </p>
         </div>
 
         {/* Widget grid */}

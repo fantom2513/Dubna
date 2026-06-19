@@ -21,6 +21,7 @@ export default function SharedLayout() {
 
   return (
     <div className="relative min-h-screen bg-bg-primary">
+      <a href="#main" className="sr-only skip-link">Перейти к содержанию</a>
       <ConstellationBackground />
       {/* All UI sits above the canvas */}
       <div className="relative" style={{ zIndex: 1 }}>
@@ -28,6 +29,7 @@ export default function SharedLayout() {
         <Navbar />
         <AnimatePresence mode="wait">
           <motion.main
+            id="main"
             key={location.pathname}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
