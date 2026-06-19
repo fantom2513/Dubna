@@ -17,15 +17,20 @@ export default function HomePage() {
       <Hero />
       <SectionDivider />
       <About />
+      {/* Stats → LiveDashboard share a background — divider separates them */}
       <Stats />
+      <SectionDivider flipped />
       <LiveDashboard />
       <Attractions />
+      {/* Science → ElementSpotlight share a background */}
       <Science />
+      <SectionDivider />
       <ElementSpotlight />
       <Architecture />
       <Climate />
-      <SectionDivider flipped />
       <Gallery />
+      {/* Gallery → Map share a background */}
+      <SectionDivider flipped />
       <Map />
     </>
   );
