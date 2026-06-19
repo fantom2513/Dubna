@@ -1,7 +1,7 @@
 import { useRef, useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
 import { CaretDown } from '@phosphor-icons/react';
 import Magnetic from '@/components/ui/Magnetic';
@@ -11,7 +11,7 @@ import { images } from '@/data/images';
 function Stars() {
   const ref = useRef<THREE.Points>(null);
   const [positions, sizes] = useMemo(() => {
-    const count = 3000;
+    const count = (typeof window !== 'undefined' && window.innerWidth < 768) ? 800 : 3000;
     const pos = new Float32Array(count * 3);
     const sz = new Float32Array(count);
     for (let i = 0; i < count; i++) {
@@ -114,8 +114,9 @@ function AtomCore() {
 }
 
 // Camera animation
-function CameraRig() {
+function CameraRig({ reduced }: { reduced: boolean | null }) {
   useFrame(({ camera, clock }) => {
+    if (reduced) return;
     const t = clock.getElapsedTime();
     camera.position.x = Math.sin(t * 0.15) * 2;
     camera.position.y = Math.cos(t * 0.1) * 1.5;
@@ -124,11 +125,11 @@ function CameraRig() {
   return null;
 }
 
-function Scene() {
+function Scene({ reduced }: { reduced: boolean | null }) {
   return (
     <>
       <fog attach="fog" args={['#07090f', 20, 80]} />
-      <CameraRig />
+      <CameraRig reduced={reduced} />
       <Stars />
       <AtomCore />
       <OrbitParticles radius={5} count={80} speed={0.5} tilt={0} color="#4fc3f7" />
@@ -148,6 +149,7 @@ const badge = [
 
 export default function Hero() {
   const [scrolled, setScrolled] = useState(false);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
     const hide = () => setScrolled(true);
@@ -164,7 +166,7 @@ export default function Hero() {
         loading="eager"
         fetchPriority="high"
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ zIndex: 0, opacity: 0.12 }}
+        style={{ zIndex: 0, opacity: 0.22 }}
       />
 
       {/* Gradient overlay (z-1) */}
@@ -182,8 +184,10 @@ export default function Hero() {
           camera={{ position: [0, 0, 16], fov: 60 }}
           gl={{ antialias: true, alpha: true }}
           style={{ background: 'transparent' }}
+          dpr={[1, (typeof window !== 'undefined' && window.innerWidth < 768) ? 1.5 : 2]}
+          frameloop={reduced ? 'demand' : 'always'}
         >
-          <Scene />
+          <Scene reduced={reduced} />
         </Canvas>
       </div>
 
@@ -227,12 +231,22 @@ export default function Hero() {
           ))}
         </div>
 
-        {/* Subtitle */}
+        {/* Tagline */}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 1.4 }}
+          className="text-text-primary/90 text-center mt-5 font-cormorant italic"
+          style={{ fontFamily: '"Cormorant Garamond", serif', fontSize: 'clamp(1.4rem, 3.2vw, 2.25rem)' }}
+        >
+          Город, где рождается будущее
+        </motion.p>
+        {/* Metadata tags (secondary) */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
-          className="text-text-secondary text-center mt-4 tracking-[0.15em] uppercase text-sm md:text-base"
+          transition={{ duration: 1, delay: 1.7 }}
+          className="text-text-secondary text-center mt-3 tracking-[0.15em] uppercase text-xs md:text-sm"
           style={{ fontFamily: '"IBM Plex Mono", monospace' }}
         >
           Наукоград · Город на Волге · Атомная столица России
@@ -284,7 +298,9 @@ export default function Hero() {
         </motion.div>
 
         {/* Scroll indicator — hides on first scroll */}
-        <motion.div
+        <motion.button
+          type="button"
+          aria-label="Перейти к содержанию"
           initial={{ opacity: 0 }}
           animate={{ opacity: scrolled ? 0 : 1 }}
           transition={{ delay: scrolled ? 0 : 2.2, duration: 0.4 }}
@@ -301,11 +317,11 @@ export default function Hero() {
               className="text-xs tracking-[0.2em] uppercase"
               style={{ fontFamily: '"IBM Plex Mono", monospace' }}
             >
-              scroll
+              прокрутите
             </span>
             <CaretDown size={24} weight="thin" />
           </motion.div>
-        </motion.div>
+        </motion.button>
       </div>
     </section>
   );
