@@ -78,6 +78,7 @@ export default function CommandPalette() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
+        showCloseButton={false}
         className="p-0 border-0 max-w-lg overflow-hidden"
         style={{
           background: 'rgba(13, 17, 23, 0.95)',

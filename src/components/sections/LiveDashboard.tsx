@@ -49,7 +49,7 @@ function UpdateIndicator() {
 
   return (
     <div
-      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-300"
+      className="fixed bottom-6 left-6 z-50 flex items-center gap-2 px-3 py-2 rounded-full transition-all duration-300"
       style={{
         background: 'rgba(13,20,40,0.9)',
         backdropFilter: 'blur(12px)',

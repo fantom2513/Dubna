@@ -38,52 +38,40 @@ function Metric({ Icon, value, label }: { Icon: PhIcon; value: string; label: st
   );
 }
 
-function SunArc({ sunrise, sunset }: { sunrise: string; sunset: string }) {
-  const now = new Date();
+// Compact daylight progress (replaces the oversized static sun arc).
+function Daylight({ sunrise, sunset }: { sunrise: string; sunset: string }) {
   const riseTime = new Date(sunrise);
   const setTime = new Date(sunset);
   const total = setTime.getTime() - riseTime.getTime();
-  const elapsed = now.getTime() - riseTime.getTime();
+  const elapsed = Date.now() - riseTime.getTime();
   const progress = Math.max(0, Math.min(1, elapsed / total));
-
-  const cx = 80, cy = 48, r = 42;
-  const t = Math.PI + (0 - Math.PI) * progress;
-  const dotX = cx + r * Math.cos(t);
-  const dotY = cy - r * Math.sin(t);
-  const isDay = progress > 0 && progress < 1;
+  const pct = progress * 100;
 
   const fmt = (d: Date) =>
     d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', hour12: false });
 
   return (
-    <div className="relative w-full">
-      <svg className="w-full h-auto" viewBox="0 0 160 56" preserveAspectRatio="xMidYMid meet">
-        <line x1={cx - r - 6} y1={cy} x2={cx + r + 6} y2={cy} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-        <path
-          d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
-          fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2" strokeDasharray="2 3"
+    <div className="flex items-center gap-3">
+      <span className="flex items-center gap-1.5 text-[11px] text-text-secondary shrink-0" style={mono}>
+        <SunHorizon size={14} className="text-accent-secondary" />
+        {fmt(riseTime)}
+      </span>
+      <div className="relative flex-1 h-1 rounded-full bg-white/[0.06]">
+        <div
+          className="absolute inset-y-0 left-0 rounded-full"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, rgba(232,184,75,0.4), #e8b84b)' }}
         />
-        {progress > 0 && (
-          <path
-            d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${dotX} ${dotY}`}
-            fill="none" stroke="#e8b84b" strokeWidth="2" strokeLinecap="round"
+        {progress > 0 && progress < 1 && (
+          <span
+            className="absolute top-1/2 w-2.5 h-2.5 rounded-full bg-accent-secondary -translate-y-1/2"
+            style={{ left: `calc(${pct}% - 5px)`, boxShadow: '0 0 8px rgba(232,184,75,0.6)' }}
           />
         )}
-        {isDay && (
-          <>
-            <circle cx={dotX} cy={dotY} r="9" fill="rgba(232,184,75,0.2)" />
-            <circle cx={dotX} cy={dotY} r="4.5" fill="#e8b84b" />
-          </>
-        )}
-      </svg>
-      <div className="flex justify-between text-[10px] mt-0.5" style={mono}>
-        <span className="flex items-center gap-1 text-text-secondary">
-          <SunHorizon size={12} className="text-accent-secondary" /> {fmt(riseTime)}
-        </span>
-        <span className="flex items-center gap-1 text-text-secondary">
-          {fmt(setTime)} <SunHorizon size={12} weight="fill" className="text-accent-secondary/70" />
-        </span>
       </div>
+      <span className="flex items-center gap-1.5 text-[11px] text-text-secondary shrink-0" style={mono}>
+        {fmt(setTime)}
+        <SunHorizon size={14} weight="fill" className="text-accent-secondary/70" />
+      </span>
     </div>
   );
 }
@@ -156,9 +144,9 @@ export default function WeatherWidget() {
               <Metric Icon={ThermometerSimple} value={`${Math.round(weather.apparent_temperature)}°`} label="ощущ." />
             </div>
 
-            {/* Sun arc */}
+            {/* Daylight progress */}
             {daily.sunrise[0] && daily.sunset[0] && (
-              <SunArc sunrise={daily.sunrise[0]} sunset={daily.sunset[0]} />
+              <Daylight sunrise={daily.sunrise[0]} sunset={daily.sunset[0]} />
             )}
 
             {/* Hourly */}

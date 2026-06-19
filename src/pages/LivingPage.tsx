@@ -292,14 +292,28 @@ function InfrastructureSection() {
               </h3>
               {level ? (
                 <>
-                  <div
-                    className="text-4xl font-bold mb-1"
-                    style={{ fontFamily: '"IBM Plex Mono", monospace', color: level.color }}
-                  >
-                    {level.emoji} {aqi}
+                  <div className="flex items-baseline gap-2 mb-1.5">
+                    <span
+                      className="text-4xl font-bold"
+                      style={{ fontFamily: '"IBM Plex Mono", monospace', color: level.color }}
+                    >
+                      {aqi}
+                    </span>
+                    <span
+                      className="text-xs text-text-secondary"
+                      style={{ fontFamily: '"IBM Plex Mono", monospace' }}
+                    >
+                      AQI
+                    </span>
                   </div>
-                  <div className="text-sm font-medium mb-1" style={{ color: level.color }}>
-                    {level.label}
+                  <div
+                    className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full mb-2 w-fit"
+                    style={{ background: `${level.color}1a`, border: `1px solid ${level.color}40` }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: level.color }} />
+                    <span className="text-sm font-medium" style={{ color: level.color }}>
+                      {level.label}
+                    </span>
                   </div>
                   <p className="text-xs text-text-secondary mt-auto">{level.description}</p>
                   <p
